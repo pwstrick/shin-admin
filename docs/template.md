@@ -290,3 +290,253 @@ const tabModalProps = {
 <p align="center">
   <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/9.png" width="500"/>
 </p>
+
+#### 7）CustomForm.js
+&emsp;&emsp;与 CreateModal.js 组件的配置类似，参数：
+* url：表单提交的地址
+* initUrl：列表数据更新的地址
+* listName：关联的列表名称
+* controls：表单中的控件，特殊控件包括 addfield、upload和csv
+* btns：自定义按钮回调对象，包括 onOk()，formatValues()
+* form：由 Form.create() 创建的表单对象
+```javascript
+const customFormProps = {
+  url: "template/create",
+  initUrl: list1Props.url,
+  btns: {
+    // onOk: (errors, values) => {
+    //   console.log("custom ok");
+    // },
+  },
+  controls: [
+    {
+      label: "专辑",
+      name: "name",
+      control: <Input style={{ width: 200 }}></Input>
+    },
+    {
+      label: "主页",
+      name: "urls",
+      type: "addfield",
+      params: {
+        rules: [{ required: true, message: "主页不能为空" }],
+        initialValue: ["http://www.pwstrick.com", "https://www.cnblogs.com/strick"]
+      },
+      control: (index) => (
+        <Input
+          placeholder={`第 ${index} 条主页地址`}
+          style={{ width: "80%" }}
+        />
+      ),
+      initControl: (props) => <AddField {...props}></AddField>
+    },
+    {
+      label: "封面",
+      name: "covers",
+      type: "addfield",
+      control: (index) => (
+        <Input
+          placeholder={`第 ${index} 条封面地址`}
+          style={{ width: "80%" }}
+        />
+      ),
+      initControl: (props) => <AddField {...props}></AddField>
+    },
+    {
+      label: "icon",
+      name: "icon",
+      type: "upload",
+      params: {
+        rules: [{ required: true, message: "icon不能为空" }],
+        initialValue: [
+          "http://localhost:6060/img/avatar.png",
+          "http://localhost:6060/img/cover.jpg"
+        ]
+      },
+      initControl: (props) => <PhotoUpload dir="demo" count={3} {...props} />
+    },
+    {
+      label: "用户导入",
+      name: "csv",
+      type: "import",
+      params: {
+        initialValue: [
+          { nick: "justify", uid: "1" },
+          { nick: "freedom", uid: "2" }
+        ]
+      },
+      initControl: (props) => (
+        <CsvUpload
+          onComplete={csvImportComplete}
+          prompt={
+            <div>
+              第一列必须是img，第二列必须是tab<a href="#">点击下载示例</a>
+            </div>
+          }
+          {...props}
+        />
+      )
+    },
+    {
+      label: "附件",
+      name: "file",
+      type: "upload",
+      params: {
+        initialValue: [
+          "http://localhost:6060/img/cover.jpg"
+        ]
+      },
+      initControl: (props) => <FileUpload dir="demo" count={3} {...props} />
+    }
+  ]
+};
+```
+
+#### 8）Btns.js
+&emsp;&emsp;在列表模板中处于顶部的按钮集合，预设了创建和Excel导出两个按钮，可自定义按钮，依托 Button组件。参数：
+* btns是一个对象数组，其属性如下：
+  * type: 根据按钮类型初始化按钮，默认提供新建（create）和导出两个按钮（export）
+  * text：按钮文案
+  * data：需要额外传递的参数，例如url、params等
+  * onClick：点击事件
+  * icon：图标
+```javascript
+const btnsProps = {
+  btns: [
+    {
+      type: "create",
+      data: {
+        params: { modalName: modalProps.attrs.name }
+      }
+    },
+    {
+      type: "export",
+      data: {
+        url: "download/appHotRankList",
+        params: { type: "anchor_today" }
+      }
+    },
+    {
+      type: "text",
+      onClick: () => {
+        dispatch({
+          type: "template/showCreate",
+          payload: { modalName: tabModalProps.attrs.name }
+        });
+      },
+      icon: "tags",
+      text: "查看"
+    }
+  ]
+};
+```
+![btn](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/10.png)
+
+#### 9）Query.js
+&emsp;&emsp;过滤条件组件，有列表和表单形式，参数：
+* url：查询的请求地址
+* listName：关联的列表名称，当一个页面中包含多个列表时使用
+* type：两种类别的过滤条件 list（列表）和form（表单）
+* controls：组件集合
+* btns：按钮回调事件集合 formatValues()
+* callback：自定义的回调函数，参数是列表数据
+* form：由 Form.create() 创建
+```javascript
+/**
+ * 列表形式的过滤条件
+ * controls 中会将多个需要在一行中显示的组件合并成数组，例如下面是两行组件集合
+ * {
+ *   [组件1，组件2],
+ *   [组件3, "search"]
+ * }
+ * 其中 search 是一个占位符，会渲染成提交按钮
+*/
+const query1Props = {
+  url: list1Props.url,
+  listName: list1Props.name,
+  btns: {
+    formatValues(values) {
+      if (values.dates) {
+        values.from = formatDate(values.dates[0]); //改成别名
+        values.to = formatDate(values.dates[1]);
+      }
+      return values;
+    }
+  },
+  controls: [
+    [
+      {
+        name: "name",
+        control: <Input placeholder="专辑名称" style={{ width: 200 }}></Input>
+      },
+      {
+        name: "mobile",
+        control: <Input placeholder="手机号" style={{ width: 200 }}></Input>
+      },
+      { name: "dates", control: <RangePicker /> }
+    ],
+    [
+      {
+        name: "state",
+        control: (
+          <Select name="state" style={{ width: 200 }}>
+            <Option value="0">状态</Option>
+            <Option value="1">永久禁用</Option>
+            <Option value="2">正常</Option>
+            <Option value="3">警告</Option>
+          </Select>
+        ),
+        params: { initialValue: "0" }
+      },
+      "search" //查询按钮占位符
+    ]
+  ],
+  callback: (response) => {
+    dispatch({
+      type: "templateList/callback",
+      payload: response
+    });
+    dispatch({
+      type: "templateList/callbackSuccess"
+    });
+  }
+};
+```
+![query1](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/11.png)
+```javascript
+/**
+ * 表单形式的过滤条件
+ * 每个组件占一行，并且不需要 search 占位符
+*/
+const query2Props = {
+  url: list2Props.url,
+  listName: list2Props.name,
+  type: "form",
+  controls: [
+    {
+      label: "专辑",
+      name: "name",
+      control: <Input style={{ width: 200 }}></Input>
+    },
+    {
+      label: "手机",
+      name: "mobile",
+      control: <Input style={{ width: 200 }}></Input>
+    },
+    {
+      label: "状态",
+      name: "state",
+      control: (
+        <Select name="state" style={{ width: 200 }}>
+          <Option value="0">全部</Option>
+          <Option value="1">永久禁用</Option>
+          <Option value="2">正常</Option>
+          <Option value="3">警告</Option>
+        </Select>
+      ),
+      params: { initialValue: "0" }
+    }
+  ]
+};
+```
+![query2](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/12.png)
