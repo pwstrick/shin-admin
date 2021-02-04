@@ -123,7 +123,7 @@ app.model({
   },
 });
 ```
-![dva](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/logo.png)
+![dva](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/dva.png)
 
 #### 4）pages
 &emsp;&emsp;所有页面的逻辑都放在此目录下，例如访问 http://localhost:8000/template/list ，那么就需要先创建 template 目录，然后创建其子目录 list，即路径为 pages/template/list。
