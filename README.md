@@ -239,7 +239,7 @@ module.exports = [
   }
 ];
 ```
-&emsp;&emsp;authority.js
+&emsp;&emsp;authority.js 中的权限会形成一棵树形结构，当 type 为 1 时，会在左侧菜单栏中展示，为 2 时就仅做一个接口权限。
 ```javascript
 /**
  * 权限列表
@@ -284,9 +284,20 @@ export default [
     }
 ]
 ```
+&emsp;&emsp;在 .umirc.js 中可引入路由信息，配置路径别名，开启代理服务器。
 
+&emsp;&emsp;当配置了路由别名时，就不需要写相对路径了，但是无法使用IDE工具的代码导航了。
+```javascript
+import request from 'utils/request';
+```
 
 # 搭建
+
+#### 1）常规流程
+
+#### 2）模板组件的演示
+
+#### 3）模板组件的实践
 
 # 其他
 #### 1）MOCK数据
