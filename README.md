@@ -25,7 +25,7 @@ $ npm install
 $ npm start
 ```
 <p align="center">
-  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/login.png" width="400"/>
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/login.png" width="500"/>
 </p>
 
 账号密码可以随意输入，提交后进入系统主页，目前是空白的，可自定义。
@@ -36,6 +36,25 @@ $ npm start
 ```bash
 $ npm run build
 ```
-在package.json的scripts字段中，还提供了其他命令，例如lint、test等。
+在 package.json 的 scripts 字段中，还提供了其他命令，例如 lint、test 等。
 
 # 目录
+```
+├── pingapple --------------------------------- 菠萝监控系统
+│   ├── client -------------------------------- 系统的前端部分
+│   ├── sdk ----------------------------------- 信息搜集代码库
+│   ├── server -------------------------------- 系统的后端部分
+```
+
+# 搭建
+
+# 其他
+
+## 1）MOCK数据
+只要在 .env 文件中添加 MOCK=none，就能关闭Mock数据。
+
+## 2）ESLint
+在 .eslintrc 中修改默认的配置，无法生效，无奈只能在某个文件顶部显式地声明，以此规避ESLint默认的规则。
+```javascript
+/* eslint-disable */
+```
