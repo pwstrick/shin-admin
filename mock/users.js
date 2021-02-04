@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-12-27 19:30:16
- * @LastEditTime: 2021-02-04 11:10:27
+ * @LastEditTime: 2021-02-04 11:35:07
  * @LastEditors: strick
  * @Description: 账户接口
  * @FilePath: /strick/shin-admin/mock/users.js
@@ -64,6 +64,7 @@ module.exports = {
   
     'POST /api/user/login' (req, res) {
       res.json({
+        code: 0,
         //token采用的是JWT的跨域认证解决方案   https://jwt.io/
         token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmODEyODhkMzU3OGJiMDA1YTc5Y2RjMSIsInVzZXJOYW1lIjoicHdzdHJpY2tAMTYzLmNvbSIsInJlYWxOYW1lIjoic3RyaWNrIiwiaWF0IjoxNjA5MDY5ODQ0LCJleHAiOjE2MDkxMTMwNDR9.H8WtilifQQEighczhXtpA_W-YP0Nm4Ci48OITRlmnCg',
         expireDays: 90,

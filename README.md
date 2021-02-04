@@ -20,8 +20,18 @@ shin 的读音是[ʃɪn]，谐音就是行，寓意可行的后台管理系统�
 ```bash
 $ npm install
 ```
-启动开发服务器，默认会打开系统主页（下图），由于会调用本地的Mock数据，所以即使没有后端服务器，项目也能运行。
+启动开发服务器，默认会进入登录页（下图），由于会调用本地的Mock数据，所以即使没有后端服务器，项目也能运行。
 ```bash
 $ npm start
 ```
+![登录](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/login.png)
+账号密码可以随意输入，提交后进入系统主页，目前是空白的，可自定义。
 ![主页](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/main.png)
+
+在开发完成后调用构建命令，可自动生成dist目录，将该目录上传到服务器上用于部署。
+```bash
+$ npm run build
+```
+在package.json的scripts字段中，还提供了其他命令，例如lint、test等。
+
+# 目录
