@@ -308,7 +308,9 @@ import request from 'utils/request';
 
 &emsp;&emsp;在此背景下，提炼出了通用的模板组件（[用法文档](https://github.com/pwstrick/shin-admin/blob/main/docs/template.md)），位于 components/Common 的 Template 和 Upload 两个目录中，效果如下图所示。
 ![列表模板](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/1.png)
-![表单模板](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/3.png)
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/3.png" width="500"/>
+</p>
 
 #### 2）高速流程
 &emsp;&emsp;模板组件就是将一些页面交互和数据处理封装起来，调用的时候只需要定义各类参数，就能快速搭建出一套完整的逻辑，并且能大大减少BUG数量。
