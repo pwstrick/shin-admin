@@ -287,9 +287,8 @@ const tabModalProps = {
 * label：新增按钮中的文本
 * control：动态新增的控件，文本框、选择框等
 * form：关联的表单
-<p align="center">
-  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/9.png" width="500"/>
-</p>
+
+<img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/9.png" width="500"/>
 
 #### 7）CustomForm.js
 &emsp;&emsp;与 CreateModal.js 组件的配置类似，参数：
