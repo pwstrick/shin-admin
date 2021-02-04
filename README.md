@@ -28,7 +28,7 @@ $ npm install
 $ npm start
 ```
 <p align="center">
-  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/login.png" width="500"/>
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/login.png" width="300"/>
 </p>
 
 &emsp;&emsp;用户名密码可以随意输入，提交后进入系统主页，目前是空白的，可自定义。
@@ -292,6 +292,8 @@ import request from 'utils/request';
 ```
 
 # 搭建
+&emsp;&emsp;在正式搭建之前，可以先了解一下管理系统运行的大致流程，如下图所示，其中账号的登录态认证，基于[JWT的方式](https://jwt.io/)。
+![流程图](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/shin.png)
 
 #### 1）常规流程
 
