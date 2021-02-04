@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-12-27 19:30:16
- * @LastEditTime: 2021-02-03 17:52:41
+ * @LastEditTime: 2021-02-04 11:10:27
  * @LastEditors: strick
  * @Description: 账户接口
  * @FilePath: /strick/shin-admin/mock/users.js
@@ -183,7 +183,7 @@ module.exports = {
     },
 
     // 会员信息
-    'GEY /api/appuser/detail': (req, res) => {
+    'GET /api/appuser/detail': (req, res) => {
       res.json({
         code: 0,
       });
