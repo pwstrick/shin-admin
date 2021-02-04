@@ -24,8 +24,12 @@ $ npm install
 ```bash
 $ npm start
 ```
-![登录](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/login.png)
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/login.png" width="400"/>
+</p>
+
 账号密码可以随意输入，提交后进入系统主页，目前是空白的，可自定义。
+
 ![主页](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/main.png)
 
 在开发完成后调用构建命令，可自动生成dist目录，将该目录上传到服务器上用于部署。
