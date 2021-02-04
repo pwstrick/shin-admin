@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-10-24 15:39:07
- * @LastEditTime: 2021-02-02 19:09:02
+ * @LastEditTime: 2021-02-04 14:15:51
  * @LastEditors: strick
  * @Description: umi配置文件
  * @FilePath: /strick/shin-admin/.umirc.js
@@ -39,7 +39,7 @@ export default {
       },
     }],
   ],
-  //代理请求到其他服务器
+  //代理请求到shin-server服务器
   proxy: {
     "/api": {
       "target": "http://localhost:6060",
