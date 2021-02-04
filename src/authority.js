@@ -1,4 +1,3 @@
-
 /**
  * 权限列表
  * @param id      {string} 权限id
@@ -79,7 +78,6 @@ export default [
       type: 1,
       name: '全局模板',
       desc: '',
-      routers: '/template',
       icon: 'file-text',
     },
     {
@@ -116,7 +114,6 @@ export default [
         type: 1,
         name: '业务工具',
         desc: '',
-        routers: '/tool',
         icon: 'github',
       },
       {
