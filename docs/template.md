@@ -699,7 +699,7 @@ const list1Props = {
 * export：Excel导出
 * handle：处理数据，增删改
 
-&emsp;&emsp;reducers 中有两个对外：
+&emsp;&emsp;reducers 中有多个对外：
 * selected：列表中的选择
 * setRecordInModal：显示模态窗口，并初始化控件
 * showCreate：显示模态窗口
