@@ -237,3 +237,56 @@ const modalProps = {
 <p align="center">
   <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/7.png" width="500"/>
 </p>
+
+#### 5）TabModal.js
+&emsp;&emsp;带标签栏的模态窗口，可用于展示一些只读信息。参数：
+* attrs：模态窗口的属性，只开放了部分：宽度、标题
+* type：标签栏类型，默认为 card
+* panes：标签栏内容
+```javascript
+const tabModalProps = {
+  type: "card",
+  attrs: {
+    name: "read",
+    width: 600,
+    title: "信息阅览"
+  },
+  panes: [
+    {
+      name: "用户信息",
+      key: "logout",
+      controls: [
+        { label: "uid", control: "123" },
+        { label: "手机", control: "+186138****00" },
+        { label: "性别", control: "男" }
+      ]
+    },
+    {
+      name: "账号信息",
+      key: "account",
+      controls: [
+        { label: "微信", control: <Button>解绑</Button> },
+        { label: "手机", control: <Button>解绑</Button> }
+      ]
+    },
+    {
+      name: "设备信息",
+      key: "device"
+    }
+  ]
+};
+```
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/8.png" width="500"/>
+</p>
+
+#### 6）AddField.js
+&emsp;&emsp;需要注意，在表单提交时，要去除数组中的空元素（可调用 tools.js中的 removeEmptyInArray() ），因为控件的名称是数组，例如“urls[]”。参数：
+* name：组件名称
+* params：组件属性，[getFieldDecorator()](https://3x.ant.design/components/form-cn/#getFieldDecorator(id,-options)-%E5%8F%82%E6%95%B0)的参数
+* label：新增按钮中的文本
+* control：动态新增的控件，文本框、选择框等
+* form：关联的表单
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/9.png" width="500"/>
+</p>
