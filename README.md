@@ -23,7 +23,7 @@ $ npm install
 ```
 
 #### 2）启动
-&emsp;&emsp;启动开发服务器，默认会进入登录页（下图），由于会调用本地的Mock数据，所以即使没有后端服务器，项目也能运行。
+&emsp;&emsp;启动开发服务器，默认会进入登录页（下图），由于会调用本地的Mock数据，所以即使没有后端服务器，项目也能运行。若要与后端配合，可参考 [shin-server](https://github.com/pwstrick/shin-server)。
 ```bash
 $ npm start
 ```
