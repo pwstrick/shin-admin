@@ -690,5 +690,33 @@ const list1Props = {
 * form：关联的表单
 
 <p align="center">
-  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/17.png" width="500"/>
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/17.png" width="600"/>
 </p>
+
+#### models/template.js
+&emsp;&emsp;在 effects 主要有：
+* query：查询
+* export：Excel导出
+* handle：处理数据，增删改
+
+&emsp;&emsp;reducers 中有两个对外：
+* selected：列表中的选择
+* setRecordInModal：显示模态窗口，并初始化控件
+* showCreate：显示模态窗口
+
+&emsp;&emsp;上述 action 也在 utils/constants.js 做了常量声明，实际使用时可直接调用它们。
+```javascript
+export const TEMPLATE_MODEL = {
+  HANDLE: "template/handle",
+  MODAL: "template/setRecordInModal",
+  QUERY: "template/query",
+  SELECTED: "template/selected",
+  CREATE: "template/showCreate",
+}
+```
+&emsp;&emsp;实践中发现 services 层比较冗余，因此改造了 utils/request.js，新增：
+* redirect：跳转
+* get：GET请求
+* post：POST请求
+
+&emsp;&emsp;请求地址统一声明到 api 目录中，预定义了 index.js，将来可做自行扩展。
