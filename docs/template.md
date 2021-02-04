@@ -95,3 +95,145 @@ return <div style={{ display: 'flex', flexWrap: 'wrap' }}>
 <p align="center">
   <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/6.png" width="300"/>
 </p>
+
+#### 4）CreateModal.js
+&emsp;&emsp;依托[Modal组件](https://3x.ant.design/components/modal-cn/)和[Form组件](https://3x.ant.design/components/form-cn/)，参数：
+* url：与服务端的通信地址
+* initUrl：列表初始化地址（用于创建成功后的列表初始化）
+* listName：交互的列表名称（当页面出现多个列表时使用）
+* attrs：模态窗口的属性（只开放了部分）
+* initControls：初始化控件的函数，参数是 record
+* btns：窗口底部的按钮回调函数集合
+  * onOk()：提交确认方法
+  * formatValues()：格式化 values 的值，必须有返回值
+* record：当前数据记录（在编辑时使用），声明于models/template.js文件
+* form：传递进来的表单，用于关联表单和控件
+
+&emsp;&emsp;在下面的示例中，除了 AntD 提供的组件之外，还可以引入封装的 AddField 和 3个上传组件，都会多一个 type参数 和 initControl() 函数，用于补充组件的属性（就是label、name、params等）。
+```javascript
+/**
+ * 只有当包含返回值时，才会执行成功
+ */
+function csvImportComplete(data) {
+  console.log("complete", data);
+}
+const modalProps = {
+  url: "template/create",
+  initUrl: "template/query",
+  listName: "list1",
+  attrs: {
+    name: "add",
+    width: 800,
+    title: "新建配置"
+  },
+  btns: {
+    // onOk: (errors, values, record) => {
+    //     // console.log(errors)
+    //     if (errors) return;
+    //     const params = { ...values };
+    //     if(record.id !== undefined)
+    //         params.id = record.id
+    //     dispatch({
+    //         type: "template/handle",
+    //         payload: {
+    //             params,
+    //             url: "template/create",
+    //             initUrl: "template/query",
+    //             modalName: "add",
+    //             listName: "list1"
+    //         }
+    //     });
+    //     // console.log(values);
+    // }
+  },
+  initControls: (record) => [
+    {
+      label: "专辑",
+      name: "aid",
+      params: {
+        initialValue: record.id ? String(record.id) : ""
+      },
+      control: (
+        <Select style={{ width: 350 }}>
+          {albumList.map((item) => (
+            <Option key={item.id} value={item.id}>
+              {item.name}
+            </Option>
+          ))}
+        </Select>
+      )
+    },
+    {
+      label: "价格",
+      name: "price",
+      params: {
+        rules: [{ required: true, message: "价格不能为空" }],
+        initialValue: record.price
+      },
+      control: (
+        <Input
+          addonAfter="元"
+          disabled={record.price === undefined ? false : true}
+        />
+      )
+    },
+    {
+      label: "icon",
+      name: "icon",
+      type: "upload",
+      params: {
+        // rules: [{ required: true, message: 'icon不能为空' }],
+        initialValue: record.icon
+      },
+      initControl: (props) => <PhotoUpload dir="demo" count={3} {...props} />
+    },
+    {
+      label: "主页",
+      name: "urls",
+      type: "addfield",
+      params: {
+        rules: [{ required: true, message: "主页不能为空" }],
+        initialValue: record.urls
+      },
+      control: (index) => (
+        <Input
+          placeholder={`第 ${index} 条主页地址`}
+          style={{ width: "80%" }}
+        />
+      ),
+      initControl: (props) => <AddField {...props}></AddField>
+    },
+    {
+      label: "用户导入",
+      name: "csv",
+      type: "import",
+      params: {
+        initialValue: record.csv
+      },
+      initControl: (props) => (
+        <CsvUpload
+          onComplete={csvImportComplete}
+          prompt={
+            <div>
+              第一列必须是img，第二列必须是tab<a href="#">点击下载示例</a>
+            </div>
+          }
+          {...props}
+        />
+      )
+    },
+    {
+      label: "附件",
+      name: "file",
+      type: "upload",
+      params: {
+        initialValue: record.file
+      },
+      initControl: (props) => <FileUpload dir="demo" count={3} {...props} />
+    }
+  ]
+};
+```
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/7.png" width="500"/>
+</p>
