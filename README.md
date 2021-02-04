@@ -42,6 +42,12 @@ $ npm run build
 ```
 &emsp;&emsp;在 package.json 的 scripts 字段中，还提供了其他命令，例如 lint、test 等。
 
+#### 4）运行流程
+&emsp;&emsp;管理系统运行的大致流程，如下图所示，其中账号的登录态认证，基于[JWT的方式](https://jwt.io/)。
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/shin.png" width="600"/>
+</p>
+
 # 目录
 ```
 ├── shin-admin
@@ -292,9 +298,6 @@ import request from 'utils/request';
 ```
 
 # 搭建
-&emsp;&emsp;在正式搭建之前，可以先了解一下管理系统运行的大致流程，如下图所示，其中账号的登录态认证，基于[JWT的方式](https://jwt.io/)。
-![流程图](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/shin.png)
-
 #### 1）常规流程
 
 #### 2）模板组件的演示
