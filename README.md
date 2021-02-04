@@ -91,7 +91,7 @@ export default {
 &emsp;&emsp;结构组件包括顶部导航、侧边菜单栏、面包屑导航和快速搜索，在上面的主页图中已体现。
 
 #### 3）models
-&emsp;&emsp;model 文件是 [Dva](https://v2.umijs.org/zh/guide/with-dva.html#model-%E6%B3%A8%E5%86%8C) 中的概念，用于处理组件中的数据，典型事例[参考此处](https://dvajs.com/api/#model)。
+&emsp;&emsp;model 文件是 [Dva](https://v2.umijs.org/zh/guide/with-dva.html#model-%E6%B3%A8%E5%86%8C) 中的概念，用于处理组件中的数据（下面是数据流向图），典型事例[参考此处](https://dvajs.com/api/#model)。
 ```javascript
 app.model({
   namespace: 'app',  //命名空间，同时也是他在全局 state 上的属性
@@ -123,6 +123,7 @@ app.model({
   },
 });
 ```
+![dva](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/logo.png)
 
 #### 4）pages
 &emsp;&emsp;所有页面的逻辑都放在此目录下，例如访问 http://localhost:8000/template/list ，那么就需要先创建 template 目录，然后创建其子目录 list，即路径为 pages/template/list。
@@ -299,6 +300,7 @@ import request from 'utils/request';
 
 # 搭建
 #### 1）常规流程
+&emsp;&emsp;
 
 #### 2）模板组件的演示
 
