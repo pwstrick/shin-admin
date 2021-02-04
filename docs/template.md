@@ -658,6 +658,7 @@ const list1Props = {
 * onComplete：导入成功后的回调
 * params：getFieldDecorator()的参数
 * form：关联的表单
+
 ![CsvUpload](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/15.png)
 
 #### 13）FileUpload.js
@@ -669,6 +670,7 @@ const list1Props = {
 * fileUrl：静态资源的域名，会与得到的文件地址拼接，默认是shin-server
 * action：上传地址，默认是shin-server的地址
 * form：关联的表单
+
 ![FileUpload](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/16.png)
 
 #### 14）PhotoUpload.js
@@ -680,4 +682,5 @@ const list1Props = {
 * fileUrl：静态资源的域名，会与得到的图像地址拼接，默认是shin-server
 * action：上传地址，默认是shin-server的地址
 * form：关联的表单
+
 ![PhotoUpload](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/17.png)
