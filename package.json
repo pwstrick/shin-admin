@@ -1,0 +1,45 @@
+{
+  "private": true,
+  "author": "pwstrick",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "umi dev",
+    "build": "umi build",
+    "test": "umi test",
+    "lint": "eslint {src,mock,tests}/**/*.{js,jsx} --fix",
+    "precommit": "lint-staged"
+  },
+  "dependencies": {
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "antd": "^3.26.0",
+    "dva": "^2.6.0-beta.6",
+    "papaparse": "^4.5.0",
+    "react-sortable-hoc": "^0.6.7"
+  },
+  "devDependencies": {
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.4.0",
+    "eslint-config-umi": "^1.4.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.2",
+    "mockjs": "^1.1.0",
+    "react-test-renderer": "^16.7.0",
+    "umi": "^2.7.7",
+    "umi-plugin-react": "^1.8.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}
