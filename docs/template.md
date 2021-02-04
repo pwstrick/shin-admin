@@ -540,3 +540,144 @@ const query2Props = {
 };
 ```
 ![query2](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/12.png)
+
+#### 10）Batch.js
+&emsp;&emsp;批处理操作，可固定顶部。
+* listName：关联的列表名称
+* initControl：控件初始化函数，参数为 selectedItems，其属性包括：
+* selectedRowKeys:[] 由id组成的数组
+* selectedRows:[] 由记录组成的数组
+  * affix：固定位置，参考[Affix组件](https://3x.ant.design/components/affix-cn/)。
+```javascript
+const batch1Props = {
+  listName: list1Props.name,
+  initControl: (selectedItem) => (
+    <>
+      <span>已选择条{selectedItem.length}记录</span>
+      <Button
+        icon="check"
+        style={{ marginLeft: 10 }}
+        onClick={() => revoke(selectedItem, list1Props)}
+      >
+        撤销
+      </Button>
+      <Button icon="close" style={{ marginLeft: 10 }} type="danger">
+        禁用
+      </Button>
+    </>
+  ),
+  affix: {
+    offsetTop: 0
+  }
+};
+```
+![batch](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/13.png)
+
+### 11）List.js
+&emsp;&emsp;包含三种列表，普通、拖拽和照片，依托[Table组件](https://3x.ant.design/components/table-cn/)和[SortTable组件](https://github.com/clauderic/react-sortable-hoc)。参数：
+* url：列表的请求地址
+* name：列表名称
+* columns：Table组件的[列信息](https://3x.ant.design/components/table-cn/#Column)
+* rowKey：表格行key的取值
+* scroll：表格滚动的[配置项](https://3x.ant.design/components/table-cn/#scroll)
+* rowSelection：表格的[选择配置](https://3x.ant.design/components/table-cn/#rowSelection)
+* page：[分页配置](https://3x.ant.design/components/pagination-cn/#API)
+* type：列表类型，包括普通列表、拖拽列表（drag）和图像列表（photo）
+* options：组件的其他自定义参数，例如 onChange()、urlPropName、footer等
+
+&emsp;&emsp;示例中的 breakWord()函数用于文本的字段换行，存在于 tools.js 中。
+```javascript
+const list1Props = {
+  url: "template/query",
+  name: "list1",
+  columns: [
+    setColumn("id", "id"),
+    setColumn("专辑", "name"),
+    setColumn("价格", "price"),
+    setColumn("状态", "status", { render: (text) => tags[text] }),
+    setColumn("注册日期", "date", { render: (prop) => formatDate(prop) }),
+    setColumn("登录日期", "udate", { render: (prop) => formatDate(prop) }),
+    setColumn("个人主页", "url", { width: "30%", render: breakWord }),
+    setColumn("操作", "id", {
+      key: "operate",
+      fixed: "right",
+      render: (id, record) => {
+        return (
+          <div>
+            {
+              <Popover
+                placement="left"
+                title="详细信息"
+                content={showDetail(record)}
+              >
+                <a>更多</a>
+                <Divider type="vertical" />
+              </Popover>
+            }
+            {
+              <span>
+                <a onClick={() => edit(record)}>编辑</a>
+                <Divider type="vertical" />
+              </span>
+            }
+            {
+              <span>
+                <Popconfirm title="确定要删除吗" onConfirm={() => del(id)}>
+                  <a>删除</a>
+                </Popconfirm>
+              </span>
+            }
+          </div>
+        );
+      }
+    })
+  ],
+  rowSelection: {
+    onChange(selectedRowKeys, selectedRows) {
+      dispatch({
+        type: "template/selected",
+        payload: {
+          params: {
+            selectedRowKeys,
+            selectedRows
+          },
+          listName: list1Props.name
+        }
+      });
+    }
+  },
+  scroll: { x: true }
+};
+```
+![list](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/14.png)
+
+#### 12）CsvUpload.js
+&emsp;&emsp;CSV导入组件，增加了预览和删除，依托[PapaParse组件](https://www.papaparse.com/)。参数：
+* name：控件名称
+* prompt：提示说明
+* onComplete：导入成功后的回调
+* params：getFieldDecorator()的参数
+* form：关联的表单
+![CsvUpload](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/15.png)
+
+#### 13）FileUpload.js
+&emsp;&emsp;文件上传组件，可上传多个，依托 Upload组件。参数：
+* name：组件名称
+* params：getFieldDecorator()的参数
+* dir：保存的目录，默认是file
+* count：可上传的文件数量
+* fileUrl：静态资源的域名，会与得到的文件地址拼接，默认是shin-server
+* action：上传地址，默认是shin-server的地址
+* form：关联的表单
+![FileUpload](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/16.png)
+
+#### 14）PhotoUpload.js
+&emsp;&emsp;图像上传组件，可上传多个。参数：
+* name：组件名称
+* params：getFieldDecorator()的参数
+* dir：保存的目录，默认是img
+* count：可上传的图像数量
+* fileUrl：静态资源的域名，会与得到的图像地址拼接，默认是shin-server
+* action：上传地址，默认是shin-server的地址
+* form：关联的表单
+![PhotoUpload](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/17.png)
