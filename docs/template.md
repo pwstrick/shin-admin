@@ -287,8 +287,9 @@ const tabModalProps = {
 * label：新增按钮中的文本
 * control：动态新增的控件，文本框、选择框等
 * form：关联的表单
-
-<img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/9.png" width="500"/>
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/9.png" width="500"/>
+</p>
 
 #### 7）CustomForm.js
 &emsp;&emsp;与 CreateModal.js 组件的配置类似，参数：
@@ -429,7 +430,9 @@ const btnsProps = {
   ]
 };
 ```
-![btn](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/10.png)
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/10.png" />
+</p>
 
 #### 9）Query.js
 &emsp;&emsp;过滤条件组件，有列表和表单形式，参数：
@@ -658,7 +661,9 @@ const list1Props = {
 * params：getFieldDecorator()的参数
 * form：关联的表单
 
-<img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/15.png" width="300"/>
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/15.png" width="300"/>
+</p>
 
 #### 13）FileUpload.js
 &emsp;&emsp;文件上传组件，可上传多个，依托 Upload组件。参数：
@@ -670,7 +675,9 @@ const list1Props = {
 * action：上传地址，默认是shin-server的地址
 * form：关联的表单
 
-<img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/16.png" width="600"/>
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/16.png" width="600"/>
+</p>
 
 #### 14）PhotoUpload.js
 &emsp;&emsp;图像上传组件，可上传多个。参数：
@@ -682,4 +689,6 @@ const list1Props = {
 * action：上传地址，默认是shin-server的地址
 * form：关联的表单
 
-![PhotoUpload](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/17.png)
+<p align="center">
+  <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/17.png" width="500"/>
+</p>
