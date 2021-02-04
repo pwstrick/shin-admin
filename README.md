@@ -306,13 +306,18 @@ import request from 'utils/request';
 
 &emsp;&emsp;其实很多后台页面所需的状态和几个特定组件都差不多，例如过滤条件、列表、模态窗口等，没必要每次写页面都重新声明一下。
 
-&emsp;&emsp;在此背景下，提炼出了通用的模板组件，位于 components/Common 的 Template 和 Upload 两个目录中，效果如下图所示。
+&emsp;&emsp;在此背景下，提炼出了通用的模板组件（[用法文档](https://github.com/pwstrick/shin-admin/blob/main/docs/template.md)），位于 components/Common 的 Template 和 Upload 两个目录中，效果如下图所示。
 ![模板组件](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/1.png)
 
 #### 2）高速流程
 &emsp;&emsp;模板组件就是将一些页面交互和数据处理封装起来，调用的时候只需要定义各类参数，就能快速搭建出一套完整的逻辑，并且能大大减少BUG数量。
+
 &emsp;&emsp;以往搭建下面这样的一张页面（包括列表、分页、创建、查询、模态窗口等部分），熟练的话也得两三个小时以上，而采用模板组件的话，最多半小时就能完成。
 ![短链服务](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/2.png)
+
+&emsp;&emsp;在 template 目录中演示了三种类型的模板页面：列表、表单和照片墙。
+
+&emsp;&emsp;在 tool 目录中完成了对模板组件的实践。
 
 # 其他
 #### 1）MOCK数据
