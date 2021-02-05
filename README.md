@@ -331,10 +331,10 @@ import request from 'utils/request';
 
 #### 3）开发步骤
 1. 在 [pages](#4pages) 目录中创建页面模块，分别新建 index.js 和 model.js。
-2. 在 api 目录中声明路由 或 在services 目录中创建通信服务。
+2. 在 [api](#1api) 目录中声明路由 或 在 [services](#5services) 目录中创建通信服务。
 3. 如果需要新增菜单栏，得需要三步走。
-    * 在 src 目录的 routes.js 路由文件中声明路径。保证 path 唯一性，component以 ”/“ 结尾，默认取该文件夹下 index.js。
-    * 在 src 目录的 authority.js 文件中配置权限列表项，routes 属性的值对应上面的 component 属性， id 会与后端权限中间件调用的关键字保持一致。
+    * 在 src 目录的 [routes.js](#8routesjs) 路由文件中声明路径。保证 path 唯一性，component以 ”/“ 结尾，默认取该文件夹下 index.js。
+    * 在 src 目录的 [authority.js](#9authorityjs) 文件中配置权限列表项，routes 属性的值对应上面的 component 属性， id 会与后端权限中间件调用的关键字保持一致。
     * 在用户管理 -》 角色管理 -》角色列表中，为当前角色增加该菜单的访问权限，然后退出登录重进。
 4. 重启项目。
 
