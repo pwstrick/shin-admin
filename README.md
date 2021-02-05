@@ -191,7 +191,7 @@ export default {
   };
 ```
 
-#### 6）其余
+#### 6）utils
 &emsp;&emsp;utils 目录中的文件如下：
 * config.js：全局配置参数
 * constants.js：全局常量
@@ -199,6 +199,7 @@ export default {
 * request.js：基于 [axios](https://github.com/axios/axios) 封装的通信库
 * tools.js：杂七杂八的工具函数
 
+#### 7）app.js
 &emsp;&emsp;app.js 在处理各种异常响应时会给出不同的提示，在401时会跳转到登录页。
 ```javascript
 export const dva = {
@@ -231,6 +232,8 @@ export const dva = {
   },
 };
 ```
+
+#### 8）routes.js
 &emsp;&emsp;routes.js会声明组件和路由之间的映射关系，其实 pages 目录下的各个页面就是一个个的组件。
 ```javascript
 module.exports = [
@@ -246,6 +249,8 @@ module.exports = [
   }
 ];
 ```
+
+#### 9）authority.js
 &emsp;&emsp;authority.js 中的权限会形成一棵树形结构，当 type 为 1 时，会在左侧菜单栏中展示，为 2 时就仅做一个接口权限。
 ```javascript
 /**
@@ -291,6 +296,8 @@ export default [
     }
 ]
 ```
+
+#### 10）.umirc.js
 &emsp;&emsp;在 .umirc.js 中可引入路由信息，配置路径别名，开启代理服务器。
 
 &emsp;&emsp;当配置了路由别名时，就不需要写相对路径了，但是无法使用IDE工具的代码导航了。
