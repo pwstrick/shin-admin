@@ -13,7 +13,7 @@
 &emsp;&emsp;当然它还有一些不友好的地方：
 
 * 大流程绝对能跑起来，但仍潜伏着很多细节BUG有待解决。
-* 有一定的学习成本，需要学习Umi配置，Dva数据流方案，Ant Design组件以及React语法等。
+* 有一定的学习成本，需要学习Umi配置，Dva数据流方案，Ant Design组件以及React、ES6+等语法。
 
 # 准备工作
 #### 1）安装
@@ -73,7 +73,7 @@ $ npm run build
 │   └───└──── global.less ---------------------- 全局样式
 │   ├── .env ----------------------------------- 环境变量
 │   ├── .umirc.js ------------------------------ umi 配置
-│   ├── package.json --------------------------- 命令和依赖包
+└───└── package.json --------------------------- 命令和依赖包
 ```
 #### 1）api
 &emsp;&emsp;api目录下可包含多个文件，默认只有一个 index.js，声明了与后端通信的 API 地址，例如。
@@ -251,7 +251,7 @@ module.exports = [
 ```
 
 #### 9）authority.js
-&emsp;&emsp;authority.js 中的权限会形成一棵树形结构，当 type 为 1 时，会在左侧菜单栏中展示，为 2 时就仅做一个接口权限。
+&emsp;&emsp;authority.js 中的权限会形成一棵树形结构，当 type 为 1 时，会在左侧菜单栏中展示，为 2 时就仅做一个接口权限。图标的选择可[参考此处](https://3x.ant.design/components/icon-cn/)。
 ```javascript
 /**
  * 权限列表
@@ -311,9 +311,9 @@ import request from 'utils/request';
 * 在 index.js 文件中编写视图的各类逻辑，将几个特定组件抽象到当前的 components 子目录中。
 * 在 model.js 文件中处理各类组件状态，并且引用 serveices 中声明的函数。
 
-&emsp;&emsp;其实很多后台页面所需的状态和几个特定组件都差不多，例如过滤条件、列表、模态窗口等，没必要每次写页面都重新声明一下。
+&emsp;&emsp;其实很多后台页面所需的状态（例如Loading、列表、数量等）和几个特定组件都差不多，例如过滤条件、列表、模态窗口等，没必要每次写页面都重新声明一下。
 
-&emsp;&emsp;在此背景下，提炼出了通用的模板组件（[用法文档](https://github.com/pwstrick/shin-admin/blob/main/docs/template.md)），位于 components/Common 的 Template 和 Upload 两个目录中，效果如下图所示。
+&emsp;&emsp;在此背景下，提炼出了通用的模板组件（[用法文档](https://github.com/pwstrick/shin-admin/blob/main/docs/template.md)），位于 components/Common 的 Template 和 Upload 两个目录中，效果如下面两张图所示。
 ![列表模板](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/1.png)
 <p align="center">
   <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/3.png" width="500"/>
@@ -331,7 +331,7 @@ import request from 'utils/request';
 
 #### 3）开发步骤
 1. 在 [pages](#4pages) 目录中创建页面模块，分别新建 index.js 和 model.js。
-2. 在 [api](#1api) 目录中声明路由 或 在 [services](#5services) 目录中创建通信服务。
+2. 在 [api](#1api) 目录中声明路由或在 [services](#5services) 目录中创建通信服务。
 3. 如果需要新增菜单栏，得需要三步走。
     * 在 src 目录的 [routes.js](#8routesjs) 路由文件中声明路径。保证 path 唯一性，component以 ”/“ 结尾，默认取该文件夹下 index.js。
     * 在 src 目录的 [authority.js](#9authorityjs) 文件中配置权限列表项，routes 属性的值对应上面的 component 属性， id 会与后端权限中间件调用的关键字保持一致。
