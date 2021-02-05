@@ -323,7 +323,7 @@ import request from 'utils/request';
 &emsp;&emsp;在 tool 目录中完成了对模板组件的实践。
 
 #### 3）开发步骤
-1. 在 pages 目录中创建页面模块，分别新建 index.js 和 model.js。
+1. 在 [pages](#4pages) 目录中创建页面模块，分别新建 index.js 和 model.js。
 2. 在 api 目录中声明路由 或 在services 目录中创建通信服务。
 3. 如果需要新增菜单栏，得需要三步走。
     * 在 src 目录的 routes.js 路由文件中声明路径。保证 path 唯一性，component以 ”/“ 结尾，默认取该文件夹下 index.js。
