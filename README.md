@@ -313,7 +313,7 @@ import request from 'utils/request';
 </p>
 
 #### 2）高速流程
-&emsp;&emsp;模板组件就是将一些页面交互和数据处理封装起来，调用的时候只需要定义各类参数，就能快速搭建出一套完整的逻辑，并且能大大减少BUG数量。
+&emsp;&emsp;模板组件（[用法文档](https://github.com/pwstrick/shin-admin/blob/main/docs/template.md)）就是将一些页面交互和数据处理封装起来，调用的时候只需要定义各类参数，就能快速搭建出一套完整的逻辑，并且能大大减少BUG数量。
 
 &emsp;&emsp;以往搭建下面这样的一张页面（包括列表、分页、创建、查询、模态窗口等部分），熟练的话也得两三个小时以上，而采用模板组件的话，最多半小时就能完成。
 ![短链服务](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/2.png)
@@ -321,6 +321,15 @@ import request from 'utils/request';
 &emsp;&emsp;在 template 目录中演示了三种类型的模板页面：列表、表单和照片墙。
 
 &emsp;&emsp;在 tool 目录中完成了对模板组件的实践。
+
+#### 3）开发步骤
+1. 在 pages 目录中创建页面模块，分别新建 index.js 和 model.js。
+2. 在 api 目录中声明路由 或 在services 目录中创建通信服务。
+3. 如果需要新增菜单栏，得需要三步走。
+    * 在 src 目录的 routes.js 路由文件中声明路径。保证 path 唯一性，component以 ”/“ 结尾，默认取该文件夹下 index.js。
+    * 在 src 目录的 authority.js 文件中配置权限列表项，routes 属性的值对应上面的 component 属性， id 会与后端权限中间件调用的关键字保持一致。
+    * 在用户管理 -》 角色管理 -》角色列表中，为当前角色增加该菜单的访问权限，然后退出登录重进。
+4. 重启项目。
 
 # 其他
 #### 1）MOCK数据
