@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2020-09-28 10:48:18
- * @LastEditTime: 2020-12-27 21:38:06
+ * @LastEditTime: 2021-02-08 12:07:37
  * @Description: 角色列表 可以对于角色进行增删改查的操作
  * @FilePath: /strick/shin-admin/src/pages/user/role/index.js
  */
@@ -13,7 +13,7 @@ import RoleList from './components/RoleList';
 import RoleModal from './components/RoleModal';
 import styles from './list.less';
 const FormItem = Form.Item;
-function List({ form, dispatch, list, page, modalVisible, title, currentRoleItem }) {
+function List({ form, dispatch, list, page, modalVisible, title, currentRoleItem, query }) {
   const {
     getFieldDecorator
   } = form;
@@ -59,6 +59,7 @@ function List({ form, dispatch, list, page, modalVisible, title, currentRoleItem
         dispatch={dispatch}
         dataSource={list}
         page={page}
+        query={query}
       />
       <RoleModal
         dispatch={dispatch}

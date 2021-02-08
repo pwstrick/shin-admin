@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { Table, Tag, Popconfirm } from 'antd';
 import authority from '@/authority';
 /* eslint-disable */
-function RoleList({ dispatch, dataSource, page }) {
+function RoleList({ dispatch, dataSource, page, query }) {
   // 渲染状态
   function renderStatus(status) {
     switch (status) {
@@ -118,6 +118,7 @@ function RoleList({ dispatch, dataSource, page }) {
       dispatch({
         type: 'userRole/query',
         payload: {
+          ...query,
           cursor,
         },
       });

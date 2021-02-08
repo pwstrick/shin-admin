@@ -12,7 +12,7 @@ const Users = ({ users, dispatch }) => {
   const {
     list, total, curPage,
     currentItem, modalVisible, modalType,
-    userRoles
+    userRoles, query
   } = users;
 
   const userSearchProps = {
@@ -20,11 +20,12 @@ const Users = ({ users, dispatch }) => {
     /**
      * 账号搜索
      */
-    onSearch(query) {
+    onSearch(params) {
       dispatch({
         type: 'users/query',
         payload: {
-          ...query
+          ...query,
+          ...params
         },
       });
     },
@@ -50,6 +51,7 @@ const Users = ({ users, dispatch }) => {
       dispatch({
         type: 'users/query',
         payload: {
+          ...query,
           curPage: pageNum,
         },
       });

@@ -17,6 +17,7 @@ export default {
     title: '', // 对话框标题
     currentRoleItem: {},
     page: {},
+    query: {},    //查询条件
   },
 
   subscriptions: {
@@ -39,7 +40,10 @@ export default {
       if (data) {
         yield put({
           type: 'querySuccess',
-          payload: data,
+          payload: {
+            data,
+            query: payload
+          },
         });
       }
     },
@@ -85,10 +89,11 @@ export default {
 
   reducers: {
     // 获取角色列表成功
-    querySuccess(state, action) {
+    querySuccess(state, { payload }) {
       return {
         ...state,
-        ...action.payload,
+        ...payload.data,
+        query: payload.query
       };
     },
 
