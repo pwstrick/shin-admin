@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-10-24 15:39:07
- * @LastEditTime: 2021-02-02 13:59:21
+ * @LastEditTime: 2021-02-20 11:36:02
  * @LastEditors: strick
  * @Description: 页面整体结构
  * @FilePath: /strick/shin-admin/src/layouts/index.js
@@ -14,12 +14,14 @@ import zhCN from 'antd/lib/locale-provider/zh_CN';
 import Menu from 'components/Layout/Menu';
 import Header from 'components/Layout/Header';
 import Bread from 'components/Layout/Bread';
+import { scrollToTop } from 'utils/tools';
 
 function App({ children, location, dispatch, app }) {
   const { siderFold, user } = app;
   if (location.pathname === '/login') {
     return (<div>{ children }</div>);
   }
+  scrollToTop();    //切换菜单 滚动到顶部
   const headerProps = {
     siderFold,
     user,

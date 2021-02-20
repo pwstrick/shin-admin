@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-11-06 14:15:30
- * @LastEditTime: 2021-02-03 11:18:44
+ * @LastEditTime: 2021-02-20 11:34:30
  * @LastEditors: strick
  * @Description: 工具集合
  * @FilePath: /strick/shin-admin/src/utils/tools.js
@@ -44,9 +44,20 @@ export function setPage({
         payload: others
       });
       //回到顶部
-      window.scrollTo(0, 0);
+      scrollToTop();
     })
   };
+}
+
+/**
+ * 平滑的滚动
+ */
+export function scrollToTop() {
+  const c = document.documentElement.scrollTop || document.body.scrollTop;
+  if (c > 0) {
+    window.requestAnimationFrame(scrollToTop);
+    window.scrollTo(0, c - c / 8);
+  }
 }
 
 /**

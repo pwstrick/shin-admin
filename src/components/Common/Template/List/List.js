@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-05 14:52:45
- * @LastEditTime: 2021-02-03 12:56:43
+ * @LastEditTime: 2021-02-20 11:39:25
  * @LastEditors: strick
  * @Description: 列表数据组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/List/List.js
@@ -11,6 +11,8 @@ import { useState } from "react";
 import { Table, Pagination, Empty, Spin } from 'antd';
 import SortTable from '../../SortableTable';
 import PhotoCard from '../PhotoCard';
+import { scrollToTop } from 'utils/tools';
+
 /**
  * url：列表的请求地址
  * name：列表名称
@@ -64,13 +66,13 @@ const List = ({ url, name, columns, rowKey="id", scroll, rowSelection, page={}, 
       pageSizeOptions,
       onChange: page => {
         queryFunc(page, pageSize);
-        window.scrollTo(0, 0);    //回到顶部
+        scrollToTop();    //回到顶部
       },
       onShowSizeChange: (current, size) => {
         //更新 pageSize 的值
         setPageSize(size);
         queryFunc(current, size);
-        window.scrollTo(0, 0);    //回到顶部
+        scrollToTop();    //回到顶部
       }
     };
   }
