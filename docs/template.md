@@ -242,7 +242,9 @@ const modalProps = {
 &emsp;&emsp;带标签栏的模态窗口，可用于展示一些只读信息。参数：
 * attrs：模态窗口的属性，只开放了部分：宽度、标题
 * type：标签栏类型，默认为 card
-* panes：标签栏内容
+* initPanes：标签栏内容回调函数，参数为 record
+* effectCallback：useEffect钩子中的回调函数，参数是 record
+* formItemLayout：自定义表单项中 label 和 wrapper 的宽度
 ```javascript
 const tabModalProps = {
   type: "card",
@@ -251,7 +253,7 @@ const tabModalProps = {
     width: 600,
     title: "信息阅览"
   },
-  panes: [
+  initPanes: record => [
     {
       name: "用户信息",
       key: "logout",

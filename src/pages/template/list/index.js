@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 10:34:41
- * @LastEditTime: 2021-02-03 13:04:09
+ * @LastEditTime: 2021-04-01 14:12:04
  * @Description: 列表模板
  * @FilePath: /strick/shin-admin/src/pages/template/list/index.js
  */
@@ -227,7 +227,7 @@ const ListDemo = ({ dispatch }) => {
       width: 600,
       title: "信息阅览"
     },
-    panes: [
+    initPanes: record => [
       {
         name: "用户信息",
         key: "logout",
