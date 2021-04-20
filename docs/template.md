@@ -676,6 +676,8 @@ const list1Props = {
 * fileUrl：静态资源的域名，会与得到的文件地址拼接，默认是shin-server
 * action：上传地址，默认是shin-server的地址
 * form：关联的表单
+* accept: 接受的文件类型
+* uploadChange：会在 onChange 事件中执行，参数包含 File和fileList 的对象
 
 <p align="center">
   <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/16.png" width="600"/>

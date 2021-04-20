@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-12 17:57:11
- * @LastEditTime: 2021-02-03 17:04:20
+ * @LastEditTime: 2021-04-20 10:02:46
  * @LastEditors: strick
  * @Description: 普通文件上传组件
  * @FilePath: /strick/shin-admin/src/components/Common/Upload/FileUpload.js
@@ -32,9 +32,14 @@ function formatInitFileList(initialValue) {
  * fileUrl：静态资源的域名，会与得到的文件地址拼接，默认是shin-server
  * action：上传地址，默认是shin-server的地址
  * form：关联的表单
+ * accept: 接受的文件类型
+ * uploadChange：会在 onChange 事件中执行，参数包含 File和fileList 的对象
  */
 /* eslint-disable */
-const FileUpload = ({name, params={}, dir = "file", count = 1, fileUrl = "http://localhost:6060/", action = "/api/common/upload", form}) => {
+const FileUpload = ({name, params={}, dir = "file", count = 1, 
+  fileUrl = "http://localhost:6060/", action = "/api/common/upload", form,
+  accept, uploadChange
+}) => {
   const { initialValue=[] } = params;
   const { getFieldDecorator } = form;
   const formatInitValue = formatInitFileList(initialValue);
@@ -76,11 +81,13 @@ const FileUpload = ({name, params={}, dir = "file", count = 1, fileUrl = "http:/
         item.thumbUrl = getUploadFileUrl(item);
       }
     });
+    uploadChange && uploadChange({ file:data.file, fileList});
     setFileList(fileList);
   }
   const uploadProps = {
     action,
     data: { dir },
+    accept
   };
   return <FormItem style={{marginBottom: 0}}>
     {getFieldDecorator(name, {
