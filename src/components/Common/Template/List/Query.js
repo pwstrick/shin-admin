@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-04 18:27:12
- * @LastEditTime: 2021-02-03 17:48:54
+ * @LastEditTime: 2021-04-26 14:37:47
  * @LastEditors: strick
  * @Description: 列表模板中的过滤条件，可按回车直接提交
  * @FilePath: /strick/shin-admin/src/components/Common/Template/List/Query.js
@@ -14,13 +14,15 @@ const FormItem = Form.Item;
  * listName：关联的列表名称，当一个页面中包含多个列表时使用
  * type：两种类别的过滤条件 list（列表）和form（表单）
  * controls：组件集合
- * btns：按钮回调事件集合 formatValues()
+ * btns：按钮回调事件集合
+ *    formatValues()：自定义函数，格式化读取到的字段值
+ *    fieldsValues：无需定义，默认提供的属性，表单中的字段值
  * callback：自定义的回调函数，参数是列表数据
  * form：由 Form.create() 创建
  * Card组件：https://3x.ant.design/components/card-cn/
 */
 const Query = ({ url, listName, type="list", controls, btns={}, callback, state, dispatch, form }) => {
-  const { getFieldDecorator, validateFields } = form;
+  const { getFieldDecorator, validateFields, getFieldsValue } = form;
   const { formatValues } = btns;
   const onClick = (e) => {
     e.preventDefault();
@@ -41,6 +43,8 @@ const Query = ({ url, listName, type="list", controls, btns={}, callback, state,
       });
     });
   };
+  // 字段读取
+  btns.fieldsValues = formatValues ? formatValues(getFieldsValue()) : getFieldsValue();
   const func = type === "list" ? listQuery : formQuery;
   return <Card style={{ marginBottom: 20 }}>
     { func(onClick, getFieldDecorator, controls, state) }
