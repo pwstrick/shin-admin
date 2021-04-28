@@ -589,8 +589,9 @@ const batch1Props = {
 * rowSelection：表格的[选择配置](https://3x.ant.design/components/table-cn/#rowSelection)
 * page：[分页配置](https://3x.ant.design/components/pagination-cn/#API)
 * type：列表类型，包括普通列表、拖拽列表（drag）和图像列表（photo）
-* options：组件的其他自定义参数，例如 onChange()、urlPropName、footer等
-
+* options：组件的其他自定义参数，例如：
+  * onChange()、urlPropName、footer等
+  * 其中 showTotal() 函数属于 Pagination 组件，用于显示总数
 &emsp;&emsp;示例中的 breakWord()函数用于文本的字段换行，存在于 tools.js 中。
 ```javascript
 const list1Props = {

@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-05 14:52:45
- * @LastEditTime: 2021-02-20 11:39:25
+ * @LastEditTime: 2021-04-28 14:03:50
  * @LastEditors: strick
  * @Description: 列表数据组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/List/List.js
@@ -22,7 +22,9 @@ import { scrollToTop } from 'utils/tools';
  * rowSelection：选择配置，https://3x.ant.design/components/table-cn/#rowSelection
  * page：分页配置，https://3x.ant.design/components/pagination-cn/#API
  * type：列表类型，包括普通列表、拖拽列表（drag）和图像列表（photo）
- * options：组件的其他自定义参数，例如 onChange()、urlPropName、footer等
+ * options：组件的其他自定义参数，例如：
+ *    onChange()、urlPropName、footer等
+ *    其中 showTotal() 函数属于 Pagination 组件，用于显示总数
  * Table组件：https://3x.ant.design/components/table-cn/
  * SortTable组件：https://github.com/clauderic/react-sortable-hoc
  */
@@ -61,6 +63,7 @@ const List = ({ url, name, columns, rowKey="id", scroll, rowSelection, page={}, 
       current: curPage,
       total,
       pageSize,
+      showTotal: options.showTotal,
       showQuickJumper,
       showSizeChanger,
       pageSizeOptions,
