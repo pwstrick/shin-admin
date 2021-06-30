@@ -101,7 +101,7 @@ return <div style={{ display: 'flex', flexWrap: 'wrap' }}>
 * url：与服务端的通信地址
 * initUrl：列表初始化地址（用于创建成功后的列表初始化）
 * listName：交互的列表名称（当页面出现多个列表时使用）
-* attrs：模态窗口的属性（只开放了部分）
+* attrs：模态窗口的属性，所有属性皆能配置
 * initControls：初始化控件的函数，参数是 record
 * btns：窗口底部的按钮回调函数集合
   * onOk()：提交确认方法
@@ -240,7 +240,7 @@ const modalProps = {
 
 #### 5）TabModal.js
 &emsp;&emsp;带标签栏的模态窗口，可用于展示一些只读信息。参数：
-* attrs：模态窗口的属性，只开放了部分：宽度、标题
+* attrs：模态窗口的属性，所有属性皆能配置
 * type：标签栏类型，默认为 card
 * initPanes：标签栏内容回调函数，参数为 record
 * effectCallback：useEffect钩子中的回调函数，参数是 record

@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-14 14:02:47
- * @LastEditTime: 2021-04-01 14:10:50
+ * @LastEditTime: 2021-06-30 11:48:39
  * @LastEditors: strick
  * @Description: 带标签栏的模态窗口
  * @FilePath: /strick/shin-admin/src/components/Common/Template/TabModal.js
@@ -13,7 +13,7 @@ import { Modal, Form, Tabs } from 'antd';
 const FormItem = Form.Item,
     TabPane = Tabs.TabPane;
 /**
- * attrs：模态窗口的属性，只开放了部分：宽度、标题
+ * attrs：模态窗口的属性，所有属性皆能配置
  * type：标签栏类型，默认为 card
  * initPanes：标签栏内容回调函数，参数为 record
  * effectCallback：useEffect钩子中的回调函数，参数是 record
@@ -35,8 +35,7 @@ const TabModal = ({ attrs, type="card", initPanes, state, dispatch, effectCallba
     });
   }
   return <Modal 
-  width = {attrs.width}
-  title = {attrs.title}
+  {...attrs}
   footer = {null}
   visible = {state[setCreatingModalNameFunc(attrs.name)]}
   onCancel = {hide}>

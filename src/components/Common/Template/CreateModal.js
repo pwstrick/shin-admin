@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 14:05:03
- * @LastEditTime: 2021-02-02 13:58:35
+ * @LastEditTime: 2021-06-30 11:48:31
  * @Description: 创建模态窗口组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/CreateModal.js
  */
@@ -14,7 +14,7 @@ const FormItem = Form.Item;
  * url：与服务端的通信地址
  * initUrl：列表初始化地址（用于创建成功后的列表初始化）
  * listName：交互的列表名称（当页面出现多个列表时使用）
- * attrs：模态窗口的属性（只开放了部分）
+ * attrs：模态窗口的属性，所有属性皆能配置
  * initControls：初始化控件的函数，参数是 record
  * btns：窗口底部的按钮回调函数集合，包括 onOk()，formatValues()
  * record：当前数据记录（在编辑时使用），声明于models/template文件
@@ -106,9 +106,7 @@ const CreateModal = ({ url, initUrl, listName, attrs, initControls, btns={}, sta
     return item.params.rules.some(value => value.required);
   }
   return <Modal 
-    width = {attrs.width}
-    title = {attrs.title}
-    footer = {attrs.footer}
+    {...attrs}
     visible = {visible}
     onCancel = {hide}
     onOk = {create}
