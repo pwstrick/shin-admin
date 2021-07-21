@@ -339,7 +339,7 @@ import request from 'utils/request';
 4. 重启项目。
 
 #### 4）通用接口
-&emsp;&emsp;由于后台管理系统大部分的操作都是增删改查（数据库基于MySQL，ORM基于Sequelize），所以可以抽象出一套这类的通用接口，从而就能避免在 Controller 和 Service 两层中新增不必要的文件。
+&emsp;&emsp;由于后台管理系统大部分的操作都是增删改查（数据库基于MySQL，ORM基于Sequelize），所以可以抽象出一套这类的通用接口，从而就能避免在 Router 和 Service 两层中新增不必要的文件。
 
 * api/get：读取一条数据（单表查询）
 * api/gets：读取多条数据（单表查询）
