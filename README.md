@@ -339,7 +339,7 @@ import request from 'utils/request';
 4. 重启项目。
 
 #### 4）通用接口
-&emsp;&emsp;由于后台管理系统大部分的操作都是增删改查（数据库基于MySQL，ORM基于Sequelize），所以可以抽象出一套这类的通用接口，从而就能避免在 Router 和 Service 两层中新增不必要的文件。
+&emsp;&emsp;由于后台管理系统大部分的操作都是增删改查（数据库基于 MySQL，ORM 基于 Sequelize），所以可以抽象出一套这类的通用接口，从而就能避免在 Router 和 Service 两层中新增不必要的文件。
 
 * api/get：读取一条数据（单表查询）
 * api/gets：读取多条数据（单表查询）
@@ -353,7 +353,7 @@ import request from 'utils/request';
    TableName : { 查询条件 }
 }
 ```
-&emsp;&emsp;其中 TableName 是服务端中Model的文件名（并非数据库中的表名），对象中的字段都是SQL的查询条件。
+&emsp;&emsp;其中 TableName 是服务端中Model的文件名（并非数据库中的表名），对象中的字段都是SQL的查询条件（语法参照 Sequelize）。
 
 &emsp;&emsp;已将这些请求封装在 utils/request.js 文件中，可直接导入至需要的位置，例如 apiGet()、apiPost() 等。
 
