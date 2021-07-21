@@ -736,4 +736,4 @@ export const TEMPLATE_MODEL = {
 
 &emsp;&emsp;这几个通用接口保存在server项目的common.js中。
 
-&emsp;&emsp;请求地址统一声明到 api 目录中，预定义了 index.js，将来可做自行扩展。
+&emsp;&emsp;注意，请求地址统一声明到 api 目录中，预定义了 index.js，将来可做自行扩展。
