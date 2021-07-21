@@ -338,6 +338,27 @@ import request from 'utils/request';
     * 在用户管理 -》 角色管理 -》角色列表中，为当前角色增加该菜单的访问权限，然后退出登录重进。
 4. 重启项目。
 
+#### 4）通用接口
+&emsp;&emsp;由于后台管理系统大部分的操作都是增删改查（数据库基于MySQL，ORM基于Sequelize），所以可以抽象出一套这类的通用接口，从而就能避免在 Controller 和 Service 两层中新增不必要的文件。
+
+* api/get：读取一条数据（单表查询）
+* api/gets：读取多条数据（单表查询）
+* api/head：读取聚合数据，例如count()、sum()、max() 和 min()
+* api/post：提交数据，用于增加记录
+* api/put：更新数据
+
+&emsp;&emsp;由于接口的参数是一个JSON格式的对象，因此全部采用post的请求方式，以 api/get 为例，它的参数是：
+```javascript
+{
+   TableName : { 查询条件 }
+}
+```
+&emsp;&emsp;其中 TableName 是服务端中Model的文件名（并非数据库中的表名），对象中的字段都是SQL的查询条件。
+
+&emsp;&emsp;已将这些请求封装在 utils/request.js 文件中，可直接导入至需要的位置，例如 apiGet()、apiPost() 等。
+
+&emsp;&emsp;在 pages/template/list/model.js 中，演示了上述方法的使用 demo，以及需要传递的参数。
+
 # 其他
 #### 1）MOCK数据
 &emsp;&emsp;Umi 框架安装了第三方的[Mock.js](http://mockjs.com/)模拟请求数据甚至逻辑，能够让前端开发独立自主，不会被服务端的开发所阻塞。

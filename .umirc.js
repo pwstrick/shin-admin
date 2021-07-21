@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-10-24 15:39:07
- * @LastEditTime: 2021-02-04 14:15:51
+ * @LastEditTime: 2021-07-21 15:41:25
  * @LastEditors: strick
  * @Description: umi配置文件
  * @FilePath: /strick/shin-admin/.umirc.js

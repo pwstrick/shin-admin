@@ -726,4 +726,14 @@ export const TEMPLATE_MODEL = {
 * get：GET请求
 * post：POST请求
 
+&emsp;&emsp;除了上述三个请求之外，还封装了一套通用接口，包括查询、修改和创建，避免在server项目中添加额外的Controller和Service文件。
+
+* apiGet：读取一条（地址：api/get）
+* apiGets：读取多条（地址：api/gets）
+* apiHead：聚合读取（地址：api/head）
+* apiPost：提交（地址：api/post）
+* apiPut：修改（地址：api/put）
+
+&emsp;&emsp;这几个通用接口保存在server项目的common.js中。
+
 &emsp;&emsp;请求地址统一声明到 api 目录中，预定义了 index.js，将来可做自行扩展。

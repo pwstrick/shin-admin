@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 10:34:41
- * @LastEditTime: 2021-04-01 14:12:04
+ * @LastEditTime: 2021-07-21 15:54:56
  * @Description: 列表模板
  * @FilePath: /strick/shin-admin/src/pages/template/list/index.js
  */
@@ -529,7 +529,8 @@ const ListDemo = ({ dispatch }) => {
         },
         url: api.templateCreate,
         initUrl: listProps.url,
-        listName: listProps.name
+        listName: listProps.name,
+        // type: 'create'
       }
     });
   }

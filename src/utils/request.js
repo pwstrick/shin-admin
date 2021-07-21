@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-12-11 13:29:06
- * @LastEditTime: 2021-02-02 19:22:38
+ * @LastEditTime: 2021-07-21 15:36:39
  * @LastEditors: strick
  * @Description: 封装的通信库
  * @FilePath: /strick/shin-admin/src/utils/request.js
@@ -9,6 +9,7 @@
 import fetch from 'axios';
 import config from 'utils/config';
 import qs from 'query-string';
+import api from '../api/';
 
 function handleError(errorObj) {
   const { response } = errorObj;
@@ -72,4 +73,77 @@ export async function post(url, data) {
  */
 export async function redirect(url, params) {
   window.location.href = `/api/${url}?${qs.stringify(params)}`;
+}
+
+/**
+ * 配置通用接口的主参数
+ */
+function setTable(table, data) {
+  let params = {};
+  if(table) {
+    params = {
+      [table]: data
+    }
+  }
+  return params;
+}
+/**
+ * 通用get
+ * table是服务器model文件的名称，并非数据库表名
+ */
+export async function apiGet({ table, where={} }) {
+  const params = setTable(table, where);
+  return request(`/api/${api.get}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+/**
+ * 通用gets
+ */
+export async function apiGets({ table, where={}, limit, order, curPage }) {
+  const params = setTable(table, where);
+  return request(`/api/${api.gets}`, {
+    method: 'POST',
+    data: {
+      ...params,
+      limit, order, curPage
+    },
+  });
+}
+/**
+ * 通用head
+ */
+export async function apiHead({ table, where={}, aggregation, field }) {
+  const params = setTable(table, where);
+  return request(`/api/${api.head}`, {
+    method: 'POST',
+    data: {
+      ...params,
+      aggregation, field
+    },
+  });
+}
+/**
+ * 通用post
+ */
+export async function apiPost({ table, data={} }) {
+  const params = setTable(table, data);
+  return request(`/api/${api.post}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+/**
+ * 通用put
+ */
+export async function apiPut({ table, set={}, where={} }) {
+  const params = setTable(table, where);
+  return request(`/api/${api.put}`, {
+    method: 'POST',
+    data: {
+      ...params,
+      set
+    },
+  });
 }

@@ -2,11 +2,11 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 11:51:35
- * @LastEditTime: 2021-02-02 13:59:55
+ * @LastEditTime: 2021-07-21 15:37:04
  * @Description: 模板数据处理
  * @FilePath: /strick/shin-admin/src/models/template.js
  */
-import { redirect, get, post } from 'utils/request';
+import { redirect, get, post, apiPost, apiPut  } from 'utils/request';
 import { success } from 'utils/tools';
 function setCreatingModalName(modalName) {
   return (modalName || 'is') + 'ModalCreating';
@@ -72,8 +72,21 @@ export default {
       //处理数据，增删改
       *handle({ payload }, { call, put, select }) {
         yield put({ type: 'showQueryLoading' });
-        const { url, params, modalName, listName, initUrl } = payload;
-        const { data } = yield call(post, url, params);
+        const { url, params, modalName, listName, initUrl, type } = payload;
+        let result;
+        // type用于区分接口
+        switch(type) {
+          case 'create':
+            result = yield call(apiPost, params);   //调用通用提交接口
+            break;
+          case 'put':
+            result = yield call(apiPut, params);    //调用通用修改接口
+            break;
+          default:
+            result = yield call(post, url, params); //调用自定义的接口
+            break;
+        }
+        const { data } = result;
         //处理响应的提示
         if(!success(data)) {
           yield put({ type: 'hideQueryLoading' });
