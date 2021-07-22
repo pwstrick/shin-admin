@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 11:51:35
- * @LastEditTime: 2021-07-21 15:37:04
+ * @LastEditTime: 2021-07-22 10:36:50
  * @Description: 模板数据处理
  * @FilePath: /strick/shin-admin/src/models/template.js
  */
@@ -16,6 +16,7 @@ function setListName(name, suffix) {
     return suffix;
   return name + suffix;
 }
+const commonGetUrls = ["get", "gets"];    //目前只支持两种通用查询接口
 const initState = {
   exportLoading: false,   //导出Loading
   queryLoading: false,    //查询Loading
@@ -50,7 +51,14 @@ export default {
       *query({ payload }, { call, put }) {
         yield put({ type: 'showQueryLoading' });
         const { url, params, modalName, listName } = payload;
-        const { data } = yield call(get, url, params);
+        let result;
+        // 若是通用URL，则采用POST提交
+        if(commonGetUrls.indexOf(url) > -1) {
+          result = yield call(post, url, params);
+        }else {
+          result = yield call(get, url, params);
+        }
+        const { data } = result;
         //将响应传递给自定义的回调函数
         payload.callback && payload.callback(data);
         yield put({

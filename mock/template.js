@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-02 11:41:55
- * @LastEditTime: 2021-02-02 15:20:52
+ * @LastEditTime: 2021-07-22 10:42:09
  * @LastEditors: strick
  * @Description: 模板接口
  * @FilePath: /strick/shin-admin/mock/template.js
@@ -122,6 +122,43 @@ module.exports = {
         }
       ],
       count: Math.round(Math.random() * 100),
+    });
+  },
+  'POST /api/get' (req, res) {
+    res.json({
+      code: 0,
+      data: {
+        "id": "123456",
+      }
+    });
+  },
+  'POST /api/gets' (req, res) {
+    res.json({
+      code: 0,
+      data: [{
+          "id": "123456",
+        }
+      ],
+      count: Math.round(Math.random() * 100),
+    });
+  },
+  'POST /api/head' (req, res) {
+    res.json({
+      code: 0,
+      data: 100
+    });
+  },
+  'POST /api/post' (req, res) {
+    res.json({
+      code: 0,
+      data: {
+        "id": "123456",
+      }
+    });
+  },
+  'POST /api/put' (req, res) {
+    res.json({
+      code: 0,
     });
   },
   'POST /api/template/create': (req, res) => {
