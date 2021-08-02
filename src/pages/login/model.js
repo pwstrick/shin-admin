@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-09-28 10:48:18
- * @LastEditTime: 2021-02-03 18:09:05
+ * @LastEditTime: 2021-08-02 17:20:05
  * @LastEditors: strick
  * @Description: 登录页面数据处理
  * @FilePath: /strick/shin-admin/src/pages/login/model.js
@@ -32,7 +32,14 @@ export default {
       localStorage.setItem(config.token, data.token);
       localStorage.setItem(config.authorities, data.authorities);
       localStorage.setItem(config.nodeEnv, data.nodeEnv);
-      yield put(routerRedux.push('/'));
+      const pathname = sessionStorage.getItem("shin_pathname");   //上一页
+      // 无上一页就跳转到主页
+      if(!pathname) {
+        yield put(routerRedux.push('/'));
+        return;
+      }
+      // 跳转到上一页
+      yield put(routerRedux.push(pathname));
     },
   },
   reducers: {

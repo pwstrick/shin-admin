@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-09-28 10:48:18
- * @LastEditTime: 2021-02-03 17:59:32
+ * @LastEditTime: 2021-08-02 17:23:52
  * @LastEditors: strick
  * @Description: 后台通用功能处理
  * @FilePath: /strick/shin-admin/src/models/app.js
@@ -20,6 +20,7 @@ export default {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname !== '/login') {
+          sessionStorage.setItem('shin_pathname', location.pathname);   //缓存上一页路径
           dispatch({
             type: 'query',
           });
