@@ -5,11 +5,16 @@
 }
 
 .sider{
-  width: 320px;
+  width: 250px;
   height: 100vh;
 }
 
 .main{
+  width: calc(100% - 250px);
+  background-color: #F8F8F8;
+}
+
+.mainPer{
   width: 100%;
   background-color: #F8F8F8;
 }

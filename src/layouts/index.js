@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-10-24 15:39:07
- * @LastEditTime: 2021-02-20 11:36:02
+ * @LastEditTime: 2021-08-02 17:15:34
  * @LastEditors: strick
  * @Description: 页面整体结构
  * @FilePath: /strick/shin-admin/src/layouts/index.js
@@ -63,7 +63,7 @@ function App({ children, location, dispatch, app }) {
           <Menu path={location.pathname}/>
         </aside> : ''
       }
-      <div className={styles.main}>
+      <div className={siderFold ? styles.mainPer : styles.main}>
         <Header {...headerProps} />
         <div className={styles.container}>
           <Bread />
