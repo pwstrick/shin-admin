@@ -391,23 +391,23 @@ import request from 'utils/request';
 
 ```javascript
 shin.setParam({
-  token: "shin-app", 									      
-  src: "//127.0.0.1:8000/api/ma.gif", 			
-  isDebug: false, 										      
-  psrc: "//127.0.0.1:8000/api/pe.gif", 		  
-  pkey: "fa768d7dbb2505c6", 					      
-  rate: 10, 												        
-  setFirstScreen: function () {					    
+  token: "shin-app",
+  src: "//127.0.0.1:8000/api/ma.gif",
+  isDebug: false,
+  psrc: "//127.0.0.1:8000/api/pe.gif",
+  pkey: "fa768d7dbb2505c6",
+  rate: 10,
+  setFirstScreen: function () {
     this.firstScreen = _calcCurrentTime();
   },
-  isCrash: true, 										    
-  validateCrash: () => {								
+  isCrash: true,
+  validateCrash: () => {
     return {
       success: document.getElementById("root").innerHTML.length > 0,
       prompt: "页面出现空白"
     };
   },
-  subdir: "operate" 									  
+  subdir: "operate"
 });
 ```
 
