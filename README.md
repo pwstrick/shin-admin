@@ -378,25 +378,36 @@ import request from 'utils/request';
 
 &emsp;&emsp;可配置的参数包括：
 
+* toekn：监控项目的唯一标识（必填）
+* subdir：一个项目下的子目录
+* src：监控数据的接收地址
+* isDebug：默认是非调试环境，而在调试中时，将不会重写 console.log
+* isCrash：是否监控页面奔溃
+* validateCrash：自定义奔溃规则函数，例如页面白屏判断的条件，返回值包括 {success: true, prompt:'提示'}
+* psrc：性能数据的接收地址
+* pkey：性能监控的项目key，在性能项目页面创建
+* rate：随机采样率，用于性能搜集，取值范围1~10
+* setFirstScreen：自定义首屏时间函数
+
 ```javascript
 shin.setParam({
-  token: "shin-app", 									      //监控项目的唯一标识
-  src: "//127.0.0.1:8000/api/ma.gif", 			//请求发送数据的地址（监控）
-  isDebug: false, 										      //默认是非调试环境，而在调试中时，将不会重写 console.log
-  psrc: "//127.0.0.1:8000/api/pe.gif", 		  //请求发送数据的地址（性能）
-  pkey: "fa768d7dbb2505c6", 					      //性能监控的项目key，在性能项目页面创建
-  rate: 10, 												        //随机采样率，用于性能搜集，取值范围1~10
-  setFirstScreen: function () {					    //自定义首屏时间
+  token: "shin-app", 									      
+  src: "//127.0.0.1:8000/api/ma.gif", 			
+  isDebug: false, 										      
+  psrc: "//127.0.0.1:8000/api/pe.gif", 		  
+  pkey: "fa768d7dbb2505c6", 					      
+  rate: 10, 												        
+  setFirstScreen: function () {					    
     this.firstScreen = _calcCurrentTime();
   },
-  isCrash: true, 										    //是否监控页面奔溃
-  validateCrash: () => {								//自定义奔溃规则，例如页面白屏判断的条件，返回值包括 {success: true, prompt:'提示'}
+  isCrash: true, 										    
+  validateCrash: () => {								
     return {
       success: document.getElementById("root").innerHTML.length > 0,
       prompt: "页面出现空白"
     };
   },
-  subdir: "operate" 									  //一个项目下的子目录
+  subdir: "operate" 									  
 });
 ```
 
