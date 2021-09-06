@@ -1,0 +1,64 @@
+<!--
+ * @Author: strick
+ * @LastEditors: strick
+ * @Date: 2021-07-23 11:42:35
+ * @LastEditTime: 2021-09-06 14:47:20
+ * @Description: 
+ * @FilePath: /strick/shin-admin/src/pages/document.ejs
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer"/>
+  <title>
+    Shin 后台管理
+  </title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/shin.js"></script>
+  <script>
+    // 当前环境
+    const env = localStorage.getItem("nodeEnv");
+    let src, isDebug=false, swSrc;
+    switch(env) {
+      case 'test':
+        src = 'test-api.shin.org';    //不存在的域名，只做演示
+        break;
+      case 'pre':
+        src = 'pre-api.shin.org';
+        break;
+      case 'production':
+        src = 'web-shin.shin.org';
+        break;
+      default:
+        src = '127.0.0.1:8000';
+        isDebug = true;
+        break;
+    }
+    src = `//${src}/api/ma.gif`;
+    shin.setParam({
+      token: "shin-app",
+      src,
+      isDebug,
+      pkey: "fa768d7dbb2505c6",   //在性能项目页面创建
+      // swSrc,
+      rate: 10,
+      isCrash: true,
+      validateCrash: () => {  //当root标签中的内容为空时，可认为页面已奔溃
+        return {
+          success: document.getElementById("root").innerHTML.length > 0,
+          prompt: '页面出现空白'
+        };
+      }
+      // subdir: "operate"
+    });
+    // setTimeout(() => {
+    //   shin.setFirstScreen();
+    //   console.log("write")
+    // }, 2000);
+  </script>
+</body>
+</html>

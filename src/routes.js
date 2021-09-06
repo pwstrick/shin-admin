@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-10-25 15:35:54
- * @LastEditTime: 2021-02-03 18:23:15
+ * @LastEditTime: 2021-09-06 11:19:13
  * @LastEditors: strick
  * @Description: 路由配置
  * @FilePath: /strick/shin-admin/src/routes.js
@@ -20,6 +20,10 @@ module.exports = [
       { path: '/template/photo', component: 'template/photo/', exact: true },
       { path: '/tool/config', component: 'tool/config/', exact: true },
       { path: '/tool/shortChain', component: 'tool/shortChain/', exact: true },
+      { path: '/monitor/dashboard', component: 'monitor/dashboard/', exact: true },  
+      { path: '/monitor/log', component: 'monitor/log/', exact: true },  
+      { path: '/monitor/performance/dashboard', component: 'monitor/pedashboard/', exact: true },  
+      { path: '/monitor/performance/project', component: 'monitor/project/', exact: true },
       { path: '/*', component: '404', exact: true },
     ]
   }

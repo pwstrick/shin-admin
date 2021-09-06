@@ -359,6 +359,145 @@ import request from 'utils/request';
 
 &emsp;&emsp;在 pages/template/list/model.js 中，演示了上述方法的使用 demo，以及需要传递的参数。
 
+# 监控系统
+&emsp;&emsp;前端监控地基本目的：了解当前项目实际使用的情况，有哪些异常，在追踪到后，对其进行分析，并提供合适的解决方案。
+
+#### 1）SDK
+&emsp;&emsp;[SDK](https://www.cnblogs.com/strick/p/14574492.html)（采用ES5语法）取名为 shin.js，其作用就是将数据通过 JavaScript 采集起来，统一发送到后台，采集的方式包括监听或劫持原始方法，获取需要上报的数据，并通过 gif 传递数据。
+
+&emsp;&emsp;整个系统大致的运行流程如下，采用gif图跨域上报：
+
+![监控架构](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/1.png)
+
+&emsp;&emsp;监控的内容包括：
+
+* 异常，包括运行时错误、通信错误（502、504等）、框架错误（Vue和React）、[页面白屏](https://www.cnblogs.com/strick/p/14986378.html)等。
+* 行为，包括用户行为、浏览器行为、控制台打印等。
+* [小程序](https://www.cnblogs.com/strick/p/14850757.html)，包括通信和错误。
+* 其他，环境信息，身份标识。
+
+&emsp;&emsp;可配置的参数包括：
+
+```javascript
+shin.setParam({
+  token: "shin-app", 									//监控项目的唯一标识
+  src: "//127.0.0.1:8000/api/ma.gif", 			//请求发送数据的地址（监控）
+  isDebug: false, 										//默认是非调试环境，而在调试中时，将不会重写 console.log
+  psrc: "//127.0.0.1:8000/api/pe.gif", 		//请求发送数据的地址（性能）
+  pkey: "fa768d7dbb2505c6", 					//性能监控的项目key，在性能项目页面创建
+  rate: 10, 												//随机采样率，用于性能搜集，取值范围1~10
+  setFirstScreen: function () {					//自定义首屏时间
+    this.firstScreen = _calcCurrentTime();
+  },
+  isCrash: true, 										//是否监控页面奔溃
+  validateCrash: () => {								//自定义奔溃规则，例如页面白屏判断的条件，返回值包括 {success: true, prompt:'提示'}
+    return {
+      success: document.getElementById("root").innerHTML.length > 0,
+      prompt: "页面出现空白"
+    };
+  },
+  subdir: "operate" 									//一个项目下的子目录
+});
+```
+
+#### 2）存储和分析
+&emsp;&emsp;监控日志目前只存储在MySQL中，但当数据量很大时，MySQL难以关键字查询，此时可将日志同步至ElasticSearch中。
+
+&emsp;&emsp;具体的存储和分析的说明可[参考此处](https://www.cnblogs.com/strick/p/14577054.html)，服务端代码参考 [shin-server](https://github.com/pwstrick/shin-server)。
+
+&emsp;&emsp;在监控看板中包含今日数据和往期趋势折线图，今日数据有今日和昨日的日志总数、错误总数和影响人数，通信、事件、打印和跳转等总数。
+
+![监控看板](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/2.png)
+
+![监控折线图](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/3.png)
+
+&emsp;&emsp;在日志列表中会包含几个过滤条件：编号、关键字、日期范围、项目、日志类型和身份标识等。
+
+![监控查询条件](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/4.png)
+
+&emsp;&emsp;在实际使用时，又发现缺张能直观展示峰值的图表，例如我想知道在哪个时间段某个特定错误的数量最多，于是又加了个按钮和柱状图，支持跨天计算。
+
+![监控峰值柱状图](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/5.png)
+
+&emsp;&emsp;身份标识可以查询到某个用户的一系列操作，更容易锁定错误发生时的情境。
+
+&emsp;&emsp;每次查询列表时，在后台就会通过Source Map文件映射位置，注意，必须得有列号才能还原，并且需要安装 [source-map](https://www.npmjs.com/package/source-map) 库。
+
+![监控源码](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/6.png)
+
+&emsp;&emsp;每天的凌晨4点，统计昨天的日志信息，还有个定时任务会在每天的凌晨3点，将一周前的数据清除，并将三周前的 map 文件删除。
+
+#### 3）性能监控
+&emsp;&emsp;[性能监控系统](https://www.cnblogs.com/strick/p/14578711.html)，用于分析线上的活动，要扎扎实实的提升用户体验。整个系统大致的运行流程如下：
+
+![性能架构](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/7.png)
+
+&emsp;&emsp;性能参数搜集的代码仍然写在前面的监控 [shin.js](https://github.com/pwstrick/shin-admin/blob/main/public/shin.js)（SDK） 中，为了兼容两个版本的性能标准，专门编写了一个函数。
+
+```javascript
+function _getTiming() {
+  var timing =
+    performance.getEntriesByType("navigation")[0] || performance.timing;
+  var now = 0;
+  if (!timing) {
+    return { now: now };
+  }
+  var navigationStart;
+  if (timing.startTime === undefined) {
+    navigationStart = timing.navigationStart;
+    /**
+     * 之所以老版本的用 Date，是为了防止出现负数
+     * 当 performance.now 是最新版本时，数值的位数要比 timing 中的少很多
+     */
+    now = new Date().getTime() - navigationStart;
+  } else {
+    navigationStart = timing.startTime;
+    now = shin.now() - navigationStart;
+  }
+  return {
+    timing: timing,
+    navigationStart: navigationStart,
+    now: _rounded(now)
+  };
+}
+```
+
+&emsp;&emsp;网上有很多种统计性能参数的计算方式，大部分都差不多，我选取了其中较为常规的参数，包括白屏、首屏等时间。
+
+&emsp;&emsp;首屏时间很难计算，一般有几种计算方式。
+
+* 第一种是算出首屏页面中所有图片都加载完后的时间，这种方法难以覆盖所有场景，并且计算结果并不准。
+* 第二种是自定义首屏时间，也就是自己来控制何时算首屏全部加载好了，这种方法相对来说要精确很多。
+
+```javascript
+shin.setFirstScreen = function() {
+  this.firstScreen = performance.now();
+}
+```
+
+&emsp;&emsp;本次上报与之前不同，需要在页面关闭时上报。而在此时普通的请求可能都无法发送成功，那么就需要 [navigator.sendBeacon()](https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator/sendBeacon) 的帮忙了。
+
+&emsp;&emsp;在实际使用中发现，iOS 设备上调试发现不会触发 beforeunload 事件，安卓会将其触发，一番查找后，根据iOS支持的事件和社区的解答，发现得用 pagehide 事件替代。
+
+&emsp;&emsp;但还是会有环境无法支持上述两个事件，想了个比较迂回的方法，那就是在后台跑个定时器，每 200ms 缓存一次要搜集的性能数据，在第二次进入时，再上报到后台。
+
+#### 4）性能看板
+&emsp;&emsp;在性能看板中，会有四张折线图，当要统计一天的数据时，横坐标为小时（0~23），纵坐标为在这个小时内正序后处于 95% 位置的日志，也就是 95% 的用户打开页面的时间。
+
+![性能看板](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/8.png)
+
+&emsp;&emsp;点击图表的 label 部分，可以在后面列表中显示日志细节，其中原始参数就是从浏览器中得到的计算前的性能数据。
+
+![性能日志](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/9.png)
+
+&emsp;&emsp;后面又增加了对比功能，就是将几天的数据放在一起对比，可更加直观的展示趋势。
+
+![性能对比](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/10.png)
+
+&emsp;&emsp;在每天的凌晨 3点30 分，统计昨天的日志信息。
+
+&emsp;&emsp;还有个定时任务会在每天的凌晨 4点30 分执行，将四周前的日志和统计数据清除。
+
 # 其他
 #### 1）MOCK数据
 &emsp;&emsp;Umi 框架安装了第三方的[Mock.js](http://mockjs.com/)模拟请求数据甚至逻辑，能够让前端开发独立自主，不会被服务端的开发所阻塞。

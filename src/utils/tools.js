@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-11-06 14:15:30
- * @LastEditTime: 2021-02-20 11:34:30
+ * @LastEditTime: 2021-09-06 13:38:07
  * @LastEditors: strick
  * @Description: 工具集合
  * @FilePath: /strick/shin-admin/src/utils/tools.js
@@ -101,11 +101,11 @@ export function formatDate(date, format = "YYYY-MM-DD HH:mm:ss") {
 /**
  * 在 pre 标签中显示格式化后的JSON数据
  */
-export function formatJsonInPre(
+ export function formatJsonInPre(
   data,
-  params = { height: 300, overflow: "auto", width: "100%" }
+  params = { height: 300, overflow: 'auto', width: '100%', whiteSpace:"pre-wrap", wordWrap:"break-word" },
 ) {
-  return <pre style={params}>{data && JSON.stringify(data, null, 2)}</pre>;
+  return <pre style={params}>{data && JSON.stringify(data, null, 2).replace(/\\n/g, '\n')}</pre>;
 }
 
 /**
@@ -126,4 +126,21 @@ export function setValueByNodeEnv({ test, pre, pro, dev}) {
     default:
       return dev;
   }
+}
+
+/**
+ * 在 pre 标签中显示格式化后的JSON数据
+ * html 元素不会被转义
+ */
+ export function formatJsonInPreWithHTML(
+  data,
+  params = {},
+  style = { height: 300, overflow: 'auto', width: '100%', whiteSpace:"pre-wrap", wordWrap:"break-word" }
+) {
+  let html = data && JSON.stringify(data, null, 2).replace(/\\n/g, '\n');
+  const { keyword } = params;
+  if(keyword) {
+    html = html.replace(new RegExp(keyword, "gi"), match => `<span style="color:#ff4d4f">${match}</span>`)
+  }
+  return <pre style={style} dangerouslySetInnerHTML={{__html: html}}></pre>;
 }
