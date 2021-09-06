@@ -365,7 +365,7 @@ import request from 'utils/request';
 #### 1）SDK
 &emsp;&emsp;[SDK](https://www.cnblogs.com/strick/p/14574492.html)（采用ES5语法）取名为 shin.js，其作用就是将数据通过 JavaScript 采集起来，统一发送到后台，采集的方式包括监听或劫持原始方法，获取需要上报的数据，并通过 gif 传递数据。
 
-&emsp;&emsp;整个系统大致的运行流程如下，采用gif图跨域上报：
+&emsp;&emsp;整个系统大致的运行流程如下：
 
 ![监控架构](https://github.com/pwstrick/shin-admin/blob/main/docs/assets/monitor/1.png)
 
@@ -380,23 +380,23 @@ import request from 'utils/request';
 
 ```javascript
 shin.setParam({
-  token: "shin-app", 									//监控项目的唯一标识
+  token: "shin-app", 									      //监控项目的唯一标识
   src: "//127.0.0.1:8000/api/ma.gif", 			//请求发送数据的地址（监控）
-  isDebug: false, 										//默认是非调试环境，而在调试中时，将不会重写 console.log
-  psrc: "//127.0.0.1:8000/api/pe.gif", 		//请求发送数据的地址（性能）
-  pkey: "fa768d7dbb2505c6", 					//性能监控的项目key，在性能项目页面创建
-  rate: 10, 												//随机采样率，用于性能搜集，取值范围1~10
-  setFirstScreen: function () {					//自定义首屏时间
+  isDebug: false, 										      //默认是非调试环境，而在调试中时，将不会重写 console.log
+  psrc: "//127.0.0.1:8000/api/pe.gif", 		  //请求发送数据的地址（性能）
+  pkey: "fa768d7dbb2505c6", 					      //性能监控的项目key，在性能项目页面创建
+  rate: 10, 												        //随机采样率，用于性能搜集，取值范围1~10
+  setFirstScreen: function () {					    //自定义首屏时间
     this.firstScreen = _calcCurrentTime();
   },
-  isCrash: true, 										//是否监控页面奔溃
+  isCrash: true, 										    //是否监控页面奔溃
   validateCrash: () => {								//自定义奔溃规则，例如页面白屏判断的条件，返回值包括 {success: true, prompt:'提示'}
     return {
       success: document.getElementById("root").innerHTML.length > 0,
       prompt: "页面出现空白"
     };
   },
-  subdir: "operate" 									//一个项目下的子目录
+  subdir: "operate" 									  //一个项目下的子目录
 });
 ```
 
