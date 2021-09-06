@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2020-12-27 19:30:16
- * @LastEditTime: 2021-02-04 11:35:07
+ * @LastEditTime: 2021-09-06 16:14:42
  * @LastEditors: strick
  * @Description: 账户接口
  * @FilePath: /strick/shin-admin/mock/users.js
@@ -84,6 +84,11 @@ module.exports = {
             'backend.tool',
             'backend.tool.shortChain',
             'backend.tool.config',
+            'backend.monitor',
+            'backend.monitor.dashboard',
+            'backend.monitor.log',
+            'backend.monitor.performance.project',
+            'backend.monitor.performance.dashboard',
         ],
       });
     },
