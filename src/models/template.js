@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 11:51:35
- * @LastEditTime: 2021-07-22 10:36:50
+ * @LastEditTime: 2021-09-14 18:49:54
  * @Description: 模板数据处理
  * @FilePath: /strick/shin-admin/src/models/template.js
  */
@@ -95,8 +95,8 @@ export default {
             break;
         }
         const { data } = result;
-        //处理响应的提示
-        if(!success(data)) {
+        if(!success(data) ||  //失败的响应
+          !initUrl) {         //不存在初始化请求
           yield put({ type: 'hideQueryLoading' });
           return;
         }
