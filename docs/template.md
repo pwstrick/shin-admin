@@ -349,7 +349,7 @@ const customFormProps = {
       name: "icon",
       type: "upload",
       params: {
-        rules: [{ required: true, message: "icon不能为空" }],
+        required: true,   //必填标记
         initialValue: [
           "http://localhost:6060/img/avatar.png",
           "http://localhost:6060/img/cover.jpg"

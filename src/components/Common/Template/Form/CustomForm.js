@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-06 15:02:12
- * @LastEditTime: 2021-02-02 13:09:16
+ * @LastEditTime: 2021-09-15 10:50:34
  * @LastEditors: strick
  * @Description: 自定义表单组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/Form/CustomForm.js
@@ -78,6 +78,10 @@ const CustomForm = ({ url, initUrl, listName, controls, btns={}, state, dispatch
   function isRequired(item) {
     if(!item.params || !item.params.rules)
       return false;
+    //手动添加必填标记
+    if(item.params.required)
+      return true;
+    //根据验证规则显示必填标记
     return item.params.rules.some(value => value.required);
   }
   return <Form>
