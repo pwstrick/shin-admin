@@ -244,6 +244,7 @@ const modalProps = {
 * type：标签栏类型，默认为 card
 * initPanes：标签栏内容回调函数，参数为 record
 * effectCallback：useEffect钩子中的回调函数，参数是 record
+* tabParams：Tabs组件的属性
 * formItemLayout：自定义表单项中 label 和 wrapper 的宽度
 ```javascript
 const tabModalProps = {

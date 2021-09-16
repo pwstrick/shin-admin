@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-14 14:02:47
- * @LastEditTime: 2021-06-30 11:48:39
+ * @LastEditTime: 2021-09-16 18:47:57
  * @LastEditors: strick
  * @Description: 带标签栏的模态窗口
  * @FilePath: /strick/shin-admin/src/components/Common/Template/TabModal.js
@@ -17,9 +17,10 @@ const FormItem = Form.Item,
  * type：标签栏类型，默认为 card
  * initPanes：标签栏内容回调函数，参数为 record
  * effectCallback：useEffect钩子中的回调函数，参数是 record
+ * tabParams：Tabs组件的属性
  * formItemLayout：自定义表单项中 label 和 wrapper 的宽度
  */
-const TabModal = ({ attrs, type="card", initPanes, state, dispatch, effectCallback, formItemLayout = {
+const TabModal = ({ attrs, type="card", initPanes, state, dispatch, effectCallback, tabParams, formItemLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 16 },
 }}) => {
