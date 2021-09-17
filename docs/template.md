@@ -588,7 +588,7 @@ const batch1Props = {
 * rowKey：表格行key的取值
 * scroll：表格滚动的[配置项](https://3x.ant.design/components/table-cn/#scroll)
 * rowSelection：表格的[选择配置](https://3x.ant.design/components/table-cn/#rowSelection)
-* page：[分页配置](https://3x.ant.design/components/pagination-cn/#API)
+* page：onPageChange()是当切换页码时的自定义回调，onShowSizeChange()是pageSize变化时的回调，[分页配置](https://3x.ant.design/components/pagination-cn/#API)
 * type：列表类型，包括普通列表、拖拽列表（drag）和图像列表（photo）
 * options：组件的其他自定义参数，例如：
   * onChange()、urlPropName、footer等

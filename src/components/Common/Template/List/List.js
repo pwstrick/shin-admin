@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-05 14:52:45
- * @LastEditTime: 2021-04-28 14:03:50
+ * @LastEditTime: 2021-09-17 11:16:09
  * @LastEditors: strick
  * @Description: 列表数据组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/List/List.js
@@ -20,7 +20,7 @@ import { scrollToTop } from 'utils/tools';
  * rowKey：表格行key的取值
  * scroll：表格滚动 配置项：https://3x.ant.design/components/table-cn/#scroll
  * rowSelection：选择配置，https://3x.ant.design/components/table-cn/#rowSelection
- * page：分页配置，https://3x.ant.design/components/pagination-cn/#API
+ * page：分页配置，其中onPageChange()是当切换页码时的自定义回调，onShowSizeChange()是pageSize变化时的回调，https://3x.ant.design/components/pagination-cn/#API
  * type：列表类型，包括普通列表、拖拽列表（drag）和图像列表（photo）
  * options：组件的其他自定义参数，例如：
  *    onChange()、urlPropName、footer等
@@ -39,7 +39,9 @@ const List = ({ url, name, columns, rowKey="id", scroll, rowSelection, page={}, 
   const {
     showQuickJumper=true, 
     showSizeChanger=true,
-    pageSizeOptions=['10', '20', '30', '40', '50']
+    pageSizeOptions=['10', '20', '30', '40', '50'],
+    onPageChange,
+    onShowSizeChange
   } = page;
   const [pageSize, setPageSize] = useState(page.pageSize || 10);
 
@@ -69,12 +71,14 @@ const List = ({ url, name, columns, rowKey="id", scroll, rowSelection, page={}, 
       pageSizeOptions,
       onChange: page => {
         queryFunc(page, pageSize);
+        onPageChange && onPageChange(page, pageSize);
         scrollToTop();    //回到顶部
       },
       onShowSizeChange: (current, size) => {
         //更新 pageSize 的值
         setPageSize(size);
         queryFunc(current, size);
+        onShowSizeChange && onShowSizeChange(current, size);
         scrollToTop();    //回到顶部
       }
     };
