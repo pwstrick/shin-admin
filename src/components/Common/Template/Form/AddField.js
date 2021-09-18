@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-06 15:46:49
- * @LastEditTime: 2021-02-02 13:53:18
+ * @LastEditTime: 2021-09-18 10:02:22
  * @LastEditors: strick
  * @Description: 动态添加控件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/Form/AddField.js
@@ -16,9 +16,10 @@ export default function AddField(props) {
    * params：组件属性，getFieldDecorator() 的参数
    * label：新增按钮中的文本
    * control：动态新增的控件，文本框、选择框等
+   * onRemove：自定义移除回调，参数 K 从0开始算起
    * form：关联的表单
    */
-  const { name, params={}, label, control, form } = props;
+  const { name, params={}, label, control, form, onRemove } = props;
   const keyName = name + 'keys';   //控件集合的唯一标识
   const { getFieldDecorator, getFieldValue, setFieldsValue } = form;
   const [curParams, setParams] = useState(params);
@@ -44,6 +45,8 @@ export default function AddField(props) {
     if (keys.length === 1) {
       return;
     }
+    //自定义移除回调
+    onRemove && onRemove(k);
     setFieldsValue({
       [keyName]: keys.filter(key => key !== k),
     });

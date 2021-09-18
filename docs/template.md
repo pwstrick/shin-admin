@@ -289,6 +289,7 @@ const tabModalProps = {
 * params：组件属性，[getFieldDecorator()](https://3x.ant.design/components/form-cn/#getFieldDecorator(id,-options)-%E5%8F%82%E6%95%B0)的参数
 * label：新增按钮中的文本
 * control：动态新增的控件，文本框、选择框等
+* onRemove：自定义移除回调，参数 K 从0开始算起
 * form：关联的表单
 <p align="center">
   <img src="https://github.com/pwstrick/shin-admin/blob/main/docs/assets/9.png" width="500"/>
