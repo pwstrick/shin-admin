@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-06 15:46:49
- * @LastEditTime: 2021-09-18 10:02:22
+ * @LastEditTime: 2021-11-10 13:16:58
  * @LastEditors: strick
  * @Description: 动态添加控件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/Form/AddField.js
@@ -40,13 +40,13 @@ export default function AddField(props) {
     setId(id);
   };
   //移除
-  const remove = (k) => {
+  const remove = (k, index) => {
     const keys = getFieldValue(keyName);
     if (keys.length === 1) {
       return;
     }
     //自定义移除回调
-    onRemove && onRemove(k);
+    onRemove && onRemove(index);
     setFieldsValue({
       [keyName]: keys.filter(key => key !== k),
     });
@@ -70,7 +70,7 @@ export default function AddField(props) {
     <FormItem key={k} style={{marginBottom: 10}}>
       {getFieldDecorator(`${name}[${k}]`, controlParams[index] || curParams)(control(index + 1))}
       {
-        keys.length > 1 ? (<Icon type="minus-circle-o" disabled={keys.length === 1} onClick={() => remove(k)} style={{marginLeft: 5}}/>) : null
+        keys.length > 1 ? (<Icon type="minus-circle-o" disabled={keys.length === 1} onClick={() => remove(k, index)} style={{marginLeft: 5}}/>) : null
       }
     </FormItem>
   ));
