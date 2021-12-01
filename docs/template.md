@@ -594,7 +594,7 @@ const batch1Props = {
 * options：组件的其他自定义参数，例如：
   * onChange()、urlPropName、footer等
   * 其中 showTotal() 函数属于 Pagination 组件，用于显示总数
-&emsp;&emsp;示例中的 breakWord()函数用于文本的字段换行，存在于 tools.js 中。响应的接口数据格式：{ code: 0, data: [], count: 0 }。
+&emsp;&emsp;示例中的 breakWord()函数用于文本的字段换行，存在于 tools.js 中。响应接口的数据格式：{ code: 0, data: [], count: 0 }。
 ```javascript
 const list1Props = {
   url: "template/query",
