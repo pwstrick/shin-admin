@@ -242,7 +242,7 @@ const modalProps = {
 &emsp;&emsp;带标签栏的模态窗口，可用于展示一些只读信息。参数：
 * attrs：模态窗口的属性，所有属性皆能配置
 * type：标签栏类型，默认为 card
-* initPanes：标签栏内容回调函数，参数为 record
+* initPanes：标签栏内容回调函数，参数为 record，当标签栏只有一项时，将不显示菜单
 * effectCallback：useEffect钩子中的回调函数，参数是 record
 * tabParams：Tabs组件的属性
 * formItemLayout：自定义表单项中 label 和 wrapper 的宽度
