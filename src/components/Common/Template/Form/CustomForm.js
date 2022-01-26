@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-06 15:02:12
- * @LastEditTime: 2021-09-15 15:06:32
+ * @LastEditTime: 2022-01-26 11:08:59
  * @LastEditors: strick
  * @Description: 自定义表单组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/Form/CustomForm.js
@@ -16,13 +16,18 @@ const FormItem = Form.Item;
  * initUrl：列表数据更新的地址
  * listName：关联的列表名称
  * controls：表单中的控件，特殊控件包括 addfield、upload和csv
- * btns：自定义按钮回调对象，包括 onOk()，formatValues()
+ * btns：自定义按钮回调对象，包括
+ *    onOk()：自定义点击事件
+ *    formatValues()：格式化表单数据
+ *    btnText：自定义按钮文本
+ *    others：其它按钮对象组成的数组，与提交按钮放置在一行
+ *      { click:"点击事件", text:"按钮文本" }
  * form：由 Form.create() 创建的表单对象
  */
-const CustomForm = ({ url, initUrl, listName, controls, btns={}, state, dispatch, form }) => {
+ const CustomForm = ({ url, initUrl, listName, controls, btns={}, state, dispatch, form }) => {
   const { queryLoading } = state;
   const { getFieldDecorator, validateFields } = form;
-  const { onOk, formatValues } = btns;
+  const { onOk, formatValues, btnText, others=[] } = btns;
   const onClick = () => {
     validateFields((errors, values) => {
       if (errors) return;
@@ -50,6 +55,21 @@ const CustomForm = ({ url, initUrl, listName, controls, btns={}, state, dispatch
           listName,
         }
       });
+    });
+  };
+  const onOtherClick = (click) => {
+    validateFields((errors, values) => {
+      if (errors) return;
+      //格式化values
+      if(formatValues) {
+        values = formatValues(values);
+      }
+      //移除数组中的空元素
+      for(let key in values) {
+        if(Array.isArray(values[key]))
+          values[key] = removeEmptyInArray(values[key]);
+      }
+      click(values);
     });
   };
   /**
@@ -100,7 +120,11 @@ const CustomForm = ({ url, initUrl, listName, controls, btns={}, state, dispatch
         </FormItem>)
       }
       <FormItem wrapperCol={{ offset: 6 }}>
-        <Button type="primary" onClick={onClick} loading={queryLoading}>提交</Button>
+        <Button style={{marginRight: 10}} type="primary" onClick={onClick} loading={queryLoading}>{ btnText || '提交' }</Button>
+        {
+          others.map(item => 
+          <Button style={{marginRight: 10}} onClick={() => onOtherClick(item.click)} loading={queryLoading}>{ item.text }</Button>)
+        }
       </FormItem>
   </Form>;
 }

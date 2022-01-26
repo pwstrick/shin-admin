@@ -301,7 +301,11 @@ const tabModalProps = {
 * initUrl：列表数据更新的地址
 * listName：关联的列表名称
 * controls：表单中的控件，特殊控件包括 addfield、upload和csv
-* btns：自定义按钮回调对象，包括 onOk()，formatValues()
+* btns：自定义按钮回调对象，包括
+  * onOk()：自定义点击事件
+  * formatValues()：格式化表单数据
+  * btnText：自定义按钮文本
+  * others：其它按钮对象组成的数组，与提交按钮放置在一行 { click:"点击事件", text:"按钮文本" }
 * form：由 Form.create() 创建的表单对象
 ```javascript
 const customFormProps = {

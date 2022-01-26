@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 11:51:35
- * @LastEditTime: 2021-09-14 18:49:54
+ * @LastEditTime: 2022-01-26 11:08:18
  * @Description: 模板数据处理
  * @FilePath: /strick/shin-admin/src/models/template.js
  */
@@ -98,7 +98,7 @@ export default {
         if(!success(data) ||  //失败的响应
           !initUrl) {         //不存在初始化请求
           yield put({ type: 'hideQueryLoading' });
-          return;
+          return data;
         }
         const query = yield select(state => state.template[setListName(listName, "query")]);
         yield put({ type: 'query', payload: {
@@ -107,6 +107,7 @@ export default {
           modalName,    //用于隐藏弹框
           listName
         }});
+        return data;
       },
     },
     reducers: {
