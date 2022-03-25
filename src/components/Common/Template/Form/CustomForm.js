@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-06 15:02:12
- * @LastEditTime: 2022-01-26 11:08:59
+ * @LastEditTime: 2022-03-25 16:06:32
  * @LastEditors: strick
  * @Description: 自定义表单组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/Form/CustomForm.js
@@ -22,12 +22,14 @@ const FormItem = Form.Item;
  *    btnText：自定义按钮文本
  *    others：其它按钮对象组成的数组，与提交按钮放置在一行
  *      { click:"点击事件", text:"按钮文本" }
+ *    currentForm：无需配置，读取当前组件的Form表单
  * form：由 Form.create() 创建的表单对象
  */
  const CustomForm = ({ url, initUrl, listName, controls, btns={}, state, dispatch, form }) => {
   const { queryLoading } = state;
   const { getFieldDecorator, validateFields } = form;
   const { onOk, formatValues, btnText, others=[] } = btns;
+  btns.currentForm = form;
   const onClick = () => {
     validateFields((errors, values) => {
       if (errors) return;

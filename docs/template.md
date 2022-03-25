@@ -306,6 +306,7 @@ const tabModalProps = {
   * formatValues()：格式化表单数据
   * btnText：自定义按钮文本
   * others：其它按钮对象组成的数组，与提交按钮放置在一行 { click:"点击事件", text:"按钮文本" }
+  * currentForm：无需配置，读取当前组件的Form表单
 * form：由 Form.create() 创建的表单对象
 ```javascript
 const customFormProps = {
