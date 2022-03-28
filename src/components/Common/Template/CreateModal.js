@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 14:05:03
- * @LastEditTime: 2021-06-30 11:48:31
+ * @LastEditTime: 2022-03-28 10:52:13
  * @Description: 创建模态窗口组件
  * @FilePath: /strick/shin-admin/src/components/Common/Template/CreateModal.js
  */
@@ -16,7 +16,7 @@ const FormItem = Form.Item;
  * listName：交互的列表名称（当页面出现多个列表时使用）
  * attrs：模态窗口的属性，所有属性皆能配置
  * initControls：初始化控件的函数，参数是 record
- * btns：窗口底部的按钮回调函数集合，包括 onOk()，formatValues()
+ * btns：窗口底部的按钮回调函数集合，包括 onOk()，formatValues()，currentForm
  * record：当前数据记录（在编辑时使用），声明于models/template文件
  * form：传递进来的表单，用于关联表单和控件
  * Modal组件：https://3x.ant.design/components/modal-cn/
@@ -31,6 +31,7 @@ const CreateModal = ({ url, initUrl, listName, attrs, initControls, btns={}, sta
     wrapperCol: { span: 16 },
   };
   const { getFieldDecorator, validateFields, resetFields } = form;
+  btns.currentForm = form;
   function create() {
     validateFields((errors, values) => {
       if (errors) return;

@@ -106,6 +106,7 @@ return <div style={{ display: 'flex', flexWrap: 'wrap' }}>
 * btns：窗口底部的按钮回调函数集合
   * onOk()：提交确认方法
   * formatValues()：格式化 values 的值，必须有返回值
+  * currentForm：无需配置，得到当前组件的Form表单
 * record：当前数据记录（在编辑时使用），声明于models/template.js文件
 * form：传递进来的表单，用于关联表单和控件
 
