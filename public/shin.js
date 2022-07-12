@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2021-09-06 15:45:27
+ * @LastEditTime: 2022-07-12 16:07:55
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -37,6 +37,7 @@
   var defaults = {
     refer: window.location.href,     //上一页地址
     firstScreen: 0,           //首屏时间 ms
+    lcp: 0,                   // 最大内容可见的时间 ms
     setFirstScreen: function() {    //自定义首屏时间
       this.firstScreen = _calcCurrentTime();
     },
@@ -122,7 +123,7 @@
     var timer = setInterval(heartbeat, HEARTBEAT_INTERVAL);
     // heartbeat();
     // 5分钟后自动取消定时器
-    setTimeout(() => {
+    setTimeout(function() {
       // 关闭定时器
       clearInterval(timer);
     }, 1000 * 300);
@@ -146,6 +147,26 @@
   function _calcCurrentTime() {
     return _getTiming().now;
   }
+  /**
+   * 浏览器 LCP 计算
+   * https://developer.mozilla.org/en-US/docs/Web/API/LargestContentfulPaint
+   */
+  function getLCP() {
+    if(!PerformanceObserver) return;
+    var types = PerformanceObserver.supportedEntryTypes;
+    var lcpType = 'largest-contentful-paint';
+    // 浏览器兼容判断
+    if(types.indexOf(lcpType) === -1) {
+      return;
+    }
+    new PerformanceObserver(function(entryList) {
+      var entries = entryList.getEntries();
+      var lastEntry = entries[entries.length - 1];
+      shin.lcp = lastEntry.renderTime || lastEntry.loadTime;
+      // buffered 为 true 表示调用 observe() 之前的也算进来
+    }).observe({type: lcpType, buffered: true});
+  }
+  getLCP();
   /**
    * 监控页面奔溃情况
    * 计算首屏时间
@@ -389,7 +410,22 @@
     obj.identity = getIdentity();
     obj.referer = window.location.href;    //来源地址
     // 若未定义或未计算到，则默认为用户可操作时间
-    obj.firstScreen = shin.firstScreen || obj.domReadyTime;
+    obj.firstScreen = shin.lcp || shin.firstScreen || obj.domReadyTime;
+    // 静态资源列表
+    var resources = performance.getEntriesByType('resource');
+    var newResources = [];
+    resources && resources.forEach(function(value) {
+      // 过滤 fetch 请求
+      if(value.initiatorType === 'fetch') return;
+      // 只存储 1 分钟内的资源
+      if(value.startTime > 60000) return;
+      newResources.push({
+        name: value.name,
+        duration: Math.round(value.duration),
+        startTime: Math.round(value.startTime),
+      })
+    });
+    obj.resource = newResources;
     return JSON.stringify(obj);
   }
 
