@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-09-06 16:15:00
- * @LastEditTime: 2021-09-06 17:02:04
+ * @LastEditTime: 2022-07-12 16:38:02
  * @Description: 监控mock数据
  * @FilePath: /strick/shin-admin/mock/monitor.js
  */
@@ -33,6 +33,28 @@ module.exports = {
     });
     const readStream = fs.createReadStream(filePath);
     readStream.pipe(res);
+  },
+  'GET /api/monitor/performance/get' (req, res) {
+    res.json({
+        code:0,
+        "data": {
+            "id": "4",
+            "load": 1246,
+            "ready": 599,
+            "paint": 756,
+            "screen": 917,
+            "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+            "measure": "{\"unloadEventTime\":5,\"loadEventTime\":3,\"interactiveTime\":599,\"parseDomTime\":644,\"initDomTreeTime\":590,\"readyStart\":1,\"redirectCount\":0,\"compression\":43,\"redirectTime\":0,\"appcacheTime\":0,\"lookupDomainTime\":0,\"connectSslTime\":0,\"connectTime\":0,\"requestTime\":6,\"requestDocumentTime\":5,\"responseDocumentTime\":1,\"TTFB\":8,\"now\":18223,\"token\":\"shin-app\"}",
+            "day": 20220712,
+            "hour": 16,
+            "minute": 31,
+            "project": "fa768d7dbb2505c6",
+            "ctime": "2022-07-12T08:31:07.000Z",
+            "identity": "1jncfm5vf75",
+            "referer": "http://localhost:8000/monitor/dashboard",
+            "timing": "{\"unloadEventStart\":12.8,\"unloadEventEnd\":17.3,\"domInteractive\":599.5,\"domContentLoadedEventStart\":599.5,\"domContentLoadedEventEnd\":599.7,\"domComplete\":1243,\"loadEventStart\":1243,\"loadEventEnd\":1245.7,\"type\":\"reload\",\"redirectCount\":0,\"initiatorType\":\"navigation\",\"nextHopProtocol\":\"http/1.1\",\"workerStart\":0,\"redirectStart\":0,\"redirectEnd\":0,\"fetchStart\":0.9,\"domainLookupStart\":0.9,\"domainLookupEnd\":0.9,\"connectStart\":0.9,\"connectEnd\":0.9,\"secureConnectionStart\":0,\"requestStart\":3.6,\"responseStart\":8.5,\"responseEnd\":9.4,\"transferSize\":1302,\"encodedBodySize\":1002,\"decodedBodySize\":1753,\"serverTiming\":[],\"name\":\"http://localhost:8000/monitor/dashboard\",\"entryType\":\"navigation\",\"startTime\":0,\"duration\":1245.7}",
+            "resource": "[{\"name\":\"http://localhost:8000/umi.css\",\"duration\":10,\"startTime\":21},{\"name\":\"http://localhost:8000/umi.dll.js\",\"duration\":251,\"startTime\":22},{\"name\":\"http://localhost:8000/shin.js\",\"duration\":13,\"startTime\":22},{\"name\":\"http://localhost:8000/umi.js\",\"duration\":54,\"startTime\":22},{\"name\":\"http://localhost:8000/vendors.chunk.css\",\"duration\":11,\"startTime\":577},{\"name\":\"http://localhost:8000/vendors.async.js\",\"duration\":36,\"startTime\":577},{\"name\":\"http://localhost:8000/layouts__index.chunk.css\",\"duration\":6,\"startTime\":578},{\"name\":\"http://localhost:8000/layouts__index.async.js\",\"duration\":6,\"startTime\":578},{\"name\":\"http://localhost:8000/api/user\",\"duration\":4,\"startTime\":586},{\"name\":\"http://localhost:8000/sockjs-node/info?t=1657614649857\",\"duration\":3,\"startTime\":619},{\"name\":\"http://127.0.0.1:8000/api/ma.gif?m=%7B%22category%22%3A%22ajax%22%2C%22data%22%3A%7B%22type%22%3A%22GET%22%2C%22url%22%3A%22http%3A%2F%2Flocalhost%3A8000%2Fsockjs-node%2Finfo%3Ft%3D1657614649857%22%2C%22status%22%3A200%2C%22endBytes%22%3A%220.15KB%22%2C%22interval%22%3A%225.3ms%22%2C%22network%22%3A%7B%22bandwidth%22%3A0%2C%22type%22%3A%224G%22%7D%2C%22response%22%3A%22%7B%5C%22websocket%5C%22%3Atrue%2C%5C%22origins%5C%22%3A%5B%5C%22*%3A*%5C%22%5D%2C%5C%22cookie_needed%5C%22%3Afalse%2C%5C%22entropy%5C%22%3A4219003093%7D%22%7D%2C%22token%22%3A%22shin-app%22%2C%22subdir%22%3A%22%22%2C%22identity%22%3A%221jncfm5vf75%22%7D&ts=1657614649862\",\"duration\":14,\"startTime\":625},{\"name\":\"http://localhost:8000/p__monitor__dashboard__model.js.async.js\",\"duration\":7,\"startTime\":729},{\"name\":\"http://localhost:8000/p__monitor__dashboard__.async.js\",\"duration\":6,\"startTime\":730},{\"name\":\"http://localhost:8000/static/logo-vertical.e642d7cb.png\",\"duration\":6,\"startTime\":747},{\"name\":\"http://localhost:8000/api/monitor/statistic\",\"duration\":3,\"startTime\":794},{\"name\":\"http://localhost:8000/api/monitor/chart\",\"duration\":3,\"startTime\":795},{\"name\":\"http://127.0.0.1:8000/api/ma.gif?m=%7B%22category%22%3A%22ajax%22%2C%22data%22%3A%7B%22type%22%3A%22GET%22%2C%22url%22%3A%22%2Fapi%2Fmonitor%2Fstatistic%22%2C%22status%22%3A200%2C%22endBytes%22%3A%220.81KB%22%2C%22interval%22%3A%2279.5ms%22%2C%22network%22%3A%7B%22bandwidth%22%3A0%2C%22type%22%3A%224G%22%7D%7D%2C%22token%22%3A%22shin-app%22%2C%22subdir%22%3A%22%22%2C%22identity%22%3A%221jncfm5vf75%22%7D&ts=1657614650111\",\"duration\":7,\"startTime\":874},{\"name\":\"http://127.0.0.1:8000/api/ma.gif?m=%7B%22category%22%3A%22ajax%22%2C%22data%22%3A%7B%22type%22%3A%22GET%22%2C%22url%22%3A%22%2Fapi%2Fmonitor%2Fchart%22%2C%22status%22%3A200%2C%22endBytes%22%3A%221.17KB%22%2C%22interval%22%3A%22356.1ms%22%2C%22network%22%3A%7B%22bandwidth%22%3A0%2C%22type%22%3A%224G%22%7D%7D%2C%22token%22%3A%22shin-app%22%2C%22subdir%22%3A%22%22%2C%22identity%22%3A%221jncfm5vf75%22%7D&ts=1657614650388\",\"duration\":2,\"startTime\":1151}]"
+        }});
   },
   'GET /api/monitor/list' (req, res) {
     res.json({

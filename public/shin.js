@@ -1,11 +1,12 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-07-12 16:07:55
+ * @LastEditTime: 2022-07-12 16:25:54
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
  */
+/* eslint-disable */
 (function (window) {
   "use strict";
 

@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-03-23 13:18:03
- * @LastEditTime: 2021-09-06 11:44:00
+ * @LastEditTime: 2022-07-12 16:27:34
  * @Description: 
  * @FilePath: /strick/shin-admin/src/pages/monitor/pedashboard/model.js
  */
@@ -15,7 +15,9 @@ const defaultState = {
   chartLoading: true,
   statistic: [],
   projectList: [],
-  performanceList: []
+  performanceList: [],
+  resourceList: [],
+  isShowWaterfall: false,
 };
 
 export default {
@@ -73,6 +75,14 @@ export default {
     clear() {
       return {
         ...defaultState
+      };
+    },
+    showWaterfall(state, { payload }) {
+      const { resourceList, isShowWaterfall } = payload;
+      return {
+        ...state,
+        resourceList,
+        isShowWaterfall,
       };
     },
     querySuccess(state, { payload }) {

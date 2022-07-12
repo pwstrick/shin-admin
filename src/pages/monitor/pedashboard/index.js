@@ -1,18 +1,55 @@
 /*
  * @Author: strick
  * @Date: 2021-01-26 17:22:19
- * @LastEditTime: 2021-09-06 11:37:04
+ * @LastEditTime: 2022-07-12 16:26:19
  * @LastEditors: strick
  * @Description: 
  * @FilePath: /strick/shin-admin/src/pages/monitor/pedashboard/index.js
  */
+/* eslint-disable */
 import { connect } from 'dva';
-import { Table } from 'antd';
+import { Table, Input } from 'antd';
 import ChartDashboard from './components/Chart';
 import { setColumn, formatJsonInPre, formatDate } from 'utils/tools';
+import Query from 'components/Common/Template/List/Query';
 import Prompt from 'components/Common/Template/Prompt';
+import Waterfall from './components/Waterfall';
+import api from 'api/index';
 
-const Pedashboard = ({ performanceList }) => {
+const Pedashboard = ({ dispatch, performanceList, resourceList, isShowWaterfall }) => {
+  const queryProps = {
+    url: api.monitorPerformanceGet,
+    controls: [
+      [
+        {
+          name: 'id',
+          control: <Input placeholder="性能日志编号" style={{ width: 200 }} />,
+        },
+        'search',
+      ],
+    ],
+    callback: (response) => {
+      if (!response.data) return;
+      const { resource } = response.data;
+      resource && dispatch({
+        type: 'monitorPeDashboard/showWaterfall',
+        payload: { isShowWaterfall: true, resourceList: JSON.parse(resource) },
+      });
+    },
+  };
+  const onShowFall = (resource) => {
+    resource && dispatch({
+      type: 'monitorPeDashboard/showWaterfall',
+      payload: { isShowWaterfall: true, resourceList: JSON.parse(resource) },
+    });
+    setTimeout(() => {
+      const element = document.getElementById('waterfall');
+      element && window.scrollTo({
+        top: (window.scrollY + element.getBoundingClientRect().top - 50),
+        behavior: 'smooth',
+      });
+    }, 500);
+  };
   // 表格头
   const columns = [
     setColumn('编号', 'id', { width: '15%', render: (value, record) => <>
@@ -28,6 +65,7 @@ const Pedashboard = ({ performanceList }) => {
       <p>screen: {record.screen}</p>
       <p>{record.identity}</p>
       <p>{record.referer}</p>
+      { record.resource ? <a onClick={() => onShowFall(record.resource)}>资源瀑布图</a> : null}
     </> }),
     setColumn('其他参数', 'measure', { width: '25%', render: (value, record) => 
       formatJsonInPre(JSON.parse(record.measure)) }),
@@ -58,6 +96,8 @@ const Pedashboard = ({ performanceList }) => {
   return (<>
     <ChartDashboard></ChartDashboard>
     <Table columns={columns} dataSource={performanceList} rowKey="id" pagination={false} style={{marginBottom: 20}}/>
+    <Query {...queryProps} />
+    {isShowWaterfall ? <Waterfall resource={resourceList} /> : null}
     <Prompt {...promptProps}></Prompt>
   </>);
 };

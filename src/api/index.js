@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-02 10:22:02
- * @LastEditTime: 2021-09-06 11:22:04
+ * @LastEditTime: 2022-07-12 16:24:04
  * @LastEditors: strick
  * @Description: 接口API映射
  * @FilePath: /strick/shin-admin/src/api/index.js
@@ -36,4 +36,5 @@ export default {
   monitorPerformanceProjectDel: "monitor/performance/project/del",              //性能监控项目删除
   monitorPerformanceStatistic: "monitor/performance/statistic",                 //性能监控统计信息
   monitorPerformanceChart: "monitor/performance/chart",                         //性能监控图表信息
+  monitorPerformanceGet: 'monitor/performance/get',                             //性能监控请求一条信息
 }
