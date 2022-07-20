@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-07-12 16:25:54
+ * @LastEditTime: 2022-07-20 18:31:03
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -38,7 +38,11 @@
   var defaults = {
     refer: window.location.href,     //上一页地址
     firstScreen: 0,           //首屏时间 ms
-    lcp: 0,                   // 最大内容可见的时间 ms
+    lcp: {
+      time: 0,    // 时间
+      url: '',    // 资源地址
+      element: '' // 参照的元素
+    },         // 最大内容可见的对象，time：时间 ms，url：参照的资源地址
     setFirstScreen: function() {    //自定义首屏时间
       this.firstScreen = _calcCurrentTime();
     },
@@ -163,7 +167,11 @@
     new PerformanceObserver(function(entryList) {
       var entries = entryList.getEntries();
       var lastEntry = entries[entries.length - 1];
-      shin.lcp = lastEntry.renderTime || lastEntry.loadTime;
+      shin.lcp = {
+        time: _rounded(lastEntry.renderTime || lastEntry.loadTime), // 取整
+        url: lastEntry.url,
+        element: lastEntry.element.outerHTML
+      };
       // buffered 为 true 表示调用 observe() 之前的也算进来
     }).observe({type: lcpType, buffered: true});
   }
@@ -442,8 +450,16 @@
    */
   var isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
   var eventName = isIOS ? "pagehide" : "beforeunload";
+  var isNeedHideEvent = true;   // 是否需求触发隐藏事件
   window.addEventListener(eventName, function() {
-    sendBeacon();
+    isNeedHideEvent && sendBeacon();
+  }, false);
+  // 在 load 事件中，上报性能参数
+  window.addEventListener('load', function() {
+    // 加定时器是避免在上报性能参数时，loadEventEnd 为 0，因为事件还没执行完毕
+    setTimeout(function() {
+      sendBeacon();
+    }, 0);
   }, false);
 
   var SHIN_PERFORMANCE_DATA = "shin_performance_data";
@@ -460,6 +476,7 @@
     }
     clearTimeout(heartbeat);
     localStorage.removeItem(SHIN_PERFORMANCE_DATA); //移除性能缓存
+    isNeedHideEvent = false;
   }
   /**
    * 发送已存在的性能数据
