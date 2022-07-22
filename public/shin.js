@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-07-20 18:31:03
+ * @LastEditTime: 2022-07-22 13:42:25
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -298,6 +298,7 @@
     var paint = performance.getEntriesByType('paint');
     if(paint && timing.entryType && paint[0]) {
       api.firstPaint = paint[0].startTime - timing.fetchStart;
+      api.firstPaintStart = paint[0].startTime;   // 记录白屏时间点
     }else {
       api.firstPaint = timing.responseEnd - timing.fetchStart;
     }
