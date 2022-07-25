@@ -41,7 +41,8 @@ const List = ({ url, name, columns, rowKey="id", scroll, rowSelection, page={}, 
     showSizeChanger=true,
     pageSizeOptions=['10', '20', '30', '40', '50'],
     onPageChange,
-    onShowSizeChange
+    onShowSizeChange,
+    isScrollToTop = true, // 滚动条自动返回顶部
   } = page;
   const [pageSize, setPageSize] = useState(page.pageSize || 10);
 
@@ -72,14 +73,14 @@ const List = ({ url, name, columns, rowKey="id", scroll, rowSelection, page={}, 
       onChange: page => {
         queryFunc(page, pageSize);
         onPageChange && onPageChange(page, pageSize);
-        scrollToTop();    //回到顶部
+        isScrollToTop && scrollToTop();    //回到顶部
       },
       onShowSizeChange: (current, size) => {
         //更新 pageSize 的值
         setPageSize(size);
         queryFunc(current, size);
         onShowSizeChange && onShowSizeChange(current, size);
-        scrollToTop();    //回到顶部
+        isScrollToTop && scrollToTop();    //回到顶部
       }
     };
   }
