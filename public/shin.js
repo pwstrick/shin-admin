@@ -427,7 +427,7 @@
     obj.identity = getIdentity();
     obj.referer = window.location.href;    //来源地址
     // 若未定义或未计算到，则默认为用户可操作时间
-    obj.firstScreen = shin.lcp || shin.firstScreen || obj.domReadyTime;
+    obj.firstScreen = shin.lcp.time || shin.firstScreen || obj.domReadyTime;
     // 静态资源列表
     var resources = performance.getEntriesByType('resource');
     var newResources = [];

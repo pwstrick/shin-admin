@@ -37,4 +37,5 @@ export default {
   monitorPerformanceStatistic: "monitor/performance/statistic",                 //性能监控统计信息
   monitorPerformanceChart: "monitor/performance/chart",                         //性能监控图表信息
   monitorPerformanceGet: 'monitor/performance/get',                             //性能监控请求一条信息
+  monitorPerformanceFlow: 'monitor/performance/flow',                           // 性能监控请求时序信息
 }

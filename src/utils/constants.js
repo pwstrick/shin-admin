@@ -130,6 +130,61 @@ export const MONITOR_CATEGORY_CASCADER = [
     label: '跳转',
   },
 ];
+// 性能参数和指标级联
+export const MONITOR_PERFORMANCE_CASCADER = [
+  {
+    value: '1',
+    label: '白屏',
+    children: [
+      {
+        value: '1',
+        label: '1秒内',
+      },
+      {
+        value: '2',
+        label: '1-2秒',
+      },
+      {
+        value: '3',
+        label: '2-3秒',
+      },
+      {
+        value: '4',
+        label: '3-4秒',
+      },
+      {
+        value: '5',
+        label: '4秒以上',
+      },
+    ],
+  },
+  {
+    value: '2',
+    label: '首屏',
+    children: [
+      {
+        value: '1',
+        label: '1秒内',
+      },
+      {
+        value: '2',
+        label: '1-2秒',
+      },
+      {
+        value: '3',
+        label: '2-3秒',
+      },
+      {
+        value: '4',
+        label: '3-4秒',
+      },
+      {
+        value: '5',
+        label: '4秒以上',
+      },
+    ],
+  },
+];
 // 颜色
 export const COLORS = [
   "#4BC0C0",

@@ -9,14 +9,17 @@
 /* eslint-disable */
 import { connect } from 'dva';
 import { Table, Input } from 'antd';
-import ChartDashboard from './components/Chart';
 import { setColumn, formatJsonInPre, formatDate } from 'utils/tools';
-import Query from 'components/Common/Template/List/Query';
 import Prompt from 'components/Common/Template/Prompt';
-import Waterfall from './components/Waterfall';
+import Query from 'components/Common/Template/List/Query';
 import api from 'api/index';
+import ChartDashboard from './components/Chart';
+import Waterfall from './components/Waterfall';
+import Flow from './components/Flow';
 
-const Pedashboard = ({ dispatch, performanceList, resourceList, isShowWaterfall }) => {
+function Pedashboard({
+  dispatch, performanceList, resourceList, isShowWaterfall,
+}) {
   const queryProps = {
     url: api.monitorPerformanceGet,
     controls: [
@@ -52,32 +55,69 @@ const Pedashboard = ({ dispatch, performanceList, resourceList, isShowWaterfall 
   };
   // 表格头
   const columns = [
-    setColumn('编号', 'id', { width: '15%', render: (value, record) => <>
-      <p>id: {value}</p>
-      <p>{formatDate(record.ctime, 'MM-DD HH:mm:ss')}</p>
-      <p>hour: {record.hour}</p>
-      <p>minute: {record.minute}</p>
-    </> }),
-    setColumn('参数', 'project', { width: '20%', render: (value, record) => <>
-      <p>load: {record.load}</p>
-      <p>ready: {record.ready}</p>
-      <p>paint: {record.paint}</p>
-      <p>screen: {record.screen}</p>
-      <p>{record.identity}</p>
-      <p>{record.referer}</p>
-      { record.resource ? <a onClick={() => onShowFall(record.resource)}>资源瀑布图</a> : null}
-    </> }),
-    setColumn('其他参数', 'measure', { width: '25%', render: (value, record) => 
-      formatJsonInPre(JSON.parse(record.measure)) }),
-    setColumn('原始参数', 'timing', { width: '20%', render: (value, record) => 
-      formatJsonInPre(JSON.parse(value)) }),
-    setColumn('代理', 'ua', { width: '20%', render: (value, record) => 
-      formatJsonInPre(JSON.parse(value)) }),
+    setColumn('编号', 'id', {
+      width: '15%',
+      render: (value, record) => (
+        <>
+          <p>
+            id:
+            {value}
+          </p>
+          <p>{formatDate(record.ctime, 'MM-DD HH:mm:ss')}</p>
+          <p>
+            hour:
+            {record.hour}
+          </p>
+          <p>
+            minute:
+            {record.minute}
+          </p>
+        </>
+      ),
+    }),
+    setColumn('参数', 'project', {
+      width: '20%',
+      render: (value, record) => (
+        <>
+          <p>
+            load:
+            {record.load}
+          </p>
+          <p>
+            ready:
+            {record.ready}
+          </p>
+          <p>
+            paint:
+            {record.paint}
+          </p>
+          <p>
+            screen:
+            {record.screen}
+          </p>
+          <p>{record.identity}</p>
+          <p>{record.referer}</p>
+          { record.resource ? <a onClick={() => onShowFall(record.resource)}>资源瀑布图</a> : null}
+        </>
+      ),
+    }),
+    setColumn('其他参数', 'measure', {
+      width: '25%',
+      render: (value, record) => formatJsonInPre(JSON.parse(record.measure)),
+    }),
+    setColumn('原始参数', 'timing', {
+      width: '20%',
+      render: (value) => formatJsonInPre(JSON.parse(value)),
+    }),
+    setColumn('代理', 'ua', {
+      width: '20%',
+      render: (value) => formatJsonInPre(JSON.parse(value)),
+    }),
   ];
 
-  //提示说明
+  // 提示说明
   const promptProps = {
-    message: "使用需知",
+    message: '使用需知',
     description: <>
       <div>参数一列中包含：</div>
       <p>页面加载总时间（load）、用户可操作时间（ready）、白屏时间（paint）、首屏时间（screen）、日志创建时间、身份标识、来源地址</p>
@@ -90,16 +130,33 @@ const Pedashboard = ({ dispatch, performanceList, resourceList, isShowWaterfall 
         <p>解析渲染：首次可交互时间（interactiveTime）、解析DOM树结构的时间（parseDomTime）、请求完毕至DOM加载耗时（initDomTreeTime）、Unload事件耗时（unloadEventTime）、load事件耗时（loadEventTime）</p>
       </div>
       <div>注意：数据只保留四周</div>
-    </>
+    </>,
   };
-  
-  return (<>
-    <ChartDashboard></ChartDashboard>
-    <Table columns={columns} dataSource={performanceList} rowKey="id" pagination={false} style={{marginBottom: 20}}/>
-    <Query {...queryProps} />
-    {isShowWaterfall ? <Waterfall resource={resourceList} /> : null}
-    <Prompt {...promptProps}></Prompt>
-  </>);
-};
+  const prompt2Props = {
+    message: '资源瀑布图',
+  };
+  const prompt3Props = {
+    message: '各阶段时序图',
+    description: <>
+      <div>当没有选择时间范围时，默认范围是一天</div>
+      <div>橙色竖线表示白屏时间，黑色竖线表示首屏时间</div>
+      <div>TTFB &gt;= redirectTime + appcacheTime + lookupDomainTime + connectTime + requestDocumentTime</div>
+      <div>因为 requestStart 和 connectEnd 之间的时间没有算，即 TCP 连接建立后到发送请求这段时间</div>
+    </>,
+  };
+  return (
+    <>
+      <ChartDashboard />
+      <Table columns={columns} dataSource={performanceList} rowKey="id" pagination={false} style={{ marginBottom: 20 }} />
+      <Prompt {...prompt2Props} />
+      <Query {...queryProps} />
+      {isShowWaterfall ? <Waterfall resource={resourceList} /> : null}
+      <Prompt {...prompt3Props} />
+      <Flow />
+      <Prompt {...promptProps} />
+      {/* <TabModal {...tabProps} /> */}
+    </>
+  );
+}
 
-export default connect(data => data.monitorPeDashboard)(Pedashboard);
+export default connect((data) => data.monitorPeDashboard)(Pedashboard);
