@@ -289,6 +289,9 @@
 
     /**
      * 用户可操作时间（DOM Ready时间）
+     * 在初始HTML文档已完全加载和解析时触发（无需等待图像和iframe完成加载）
+     * 紧跟在DOMInteractive之后。
+     * https://www.dareboost.com/en/doc/website-speed-test/metrics/dom-content-loaded-dcl
      */
     api.domReadyTime = timing.domContentLoadedEventEnd - timing.fetchStart;
     
@@ -304,14 +307,19 @@
     }
 
     /**
-     * 解析 DOM 树结构的时间
-     * 期间要加载内嵌资源
-     * 反省下你的 DOM 树嵌套是不是太多了
+     * 解析DOM树结构的时间
+     * DOM中的所有脚本，包括具有async属性的脚本，都已执行。加载 DOM 中定义的所有页面静态资源（图像、iframe等）
+     * LoadEventStart紧跟在Complete之后。 在大多数情况下，这2个指标是相等的。
+     * 在加载事件开始之前可能引入的唯一额外延迟将由onReadyStateChange的处理引起。
+     * https://www.dareboost.com/en/doc/website-speed-test/metrics/dom-complete
      */
     api.parseDomTime = timing.domComplete - timing.domInteractive;
 
     /**
      * 请求完毕至DOM加载耗时
+     * 在加载DOM并执行网页的阻塞脚本时触发
+     * 在这个阶段，具有defer属性的脚本还没有执行，某些样式表加载可能仍在处理并阻止页面呈现
+     * https://www.dareboost.com/en/doc/website-speed-test/metrics/dom-interactive
      */
     api.initDomTreeTime = timing.domInteractive - timing.responseEnd;
 
@@ -378,12 +386,11 @@
     api.responseDocumentTime = timing.responseEnd - timing.responseStart;
 
     /**
-     * 读取页面第一个字节的时间
-     * 这可以理解为用户拿到你的资源占用的时间，加异地机房了么，加CDN 处理了么？加带宽了么？加 CPU 运算速度了么？
+     * 读取页面第一个字节的时间，包含重定向时间
      * TTFB 即 Time To First Byte 的意思
      * 维基百科：https://en.wikipedia.org/wiki/Time_To_First_Byte
      */
-    api.TTFB = timing.responseStart - timing.fetchStart;
+    api.TTFB = timing.responseStart - timing.redirectStart;
 
     /**
     * 仅用来记录当前 performance.now() 获取到的时间格式
