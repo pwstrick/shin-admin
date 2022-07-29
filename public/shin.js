@@ -170,7 +170,7 @@
       shin.lcp = {
         time: _rounded(lastEntry.renderTime || lastEntry.loadTime), // 取整
         url: lastEntry.url,
-        element: lastEntry.element.outerHTML
+        element: lastEntry.element ? lastEntry.element.outerHTML : ''
       };
       // buffered 为 true 表示调用 observe() 之前的也算进来
     }).observe({type: lcpType, buffered: true});
@@ -704,10 +704,15 @@
             //请求失败
             req.ajax.endBytes = 0;
           }
+          // 为监控的响应头添加 req-id 字段
+          var reqId = req.getResponseHeader('req-id');
+          if(reqId) {
+            req.ajax.header ? (req.ajax.header['req-id'] = reqId) : (req.ajax.header = { 'req-id':reqId });
+          }
           req.ajax.interval = _rounded(end - start, 2) + "ms";   //单位毫秒
           req.ajax.network = shin.network();
-          //只记录300个字符以内的响应
-          req.responseText.length <= 300 && (req.ajax.response = req.responseText);
+          // 只记录6000个字符以内的响应限制，以便让MySQL表中的message字段能成功存储
+          req.responseText.length <= 6000 && (req.ajax.response = req.responseText);
           if(req.status < 500 &&            //只传送500以内的通信
             req.ajax.url !== '/api/user'  //不需要监控后台身份通信
           )
@@ -725,7 +730,16 @@
       req.ajax.url = url; //埋点
       return _open.apply(req, arguments);
     };
-
+    // 设置请求首部
+    var _setRequestHeader = req.setRequestHeader;
+    req.setRequestHeader = function (header, value) {
+      if(header === 'Authorization') {  // 监控身份状态
+        req.ajax.header = {
+          [header]: value
+        }
+      }
+      return _setRequestHeader.apply(req, arguments);
+    };
     var _send = req.send;
     var start;    //请求开始时间
     req.send = function (data) {
