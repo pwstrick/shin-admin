@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-07-22 13:42:25
+ * @LastEditTime: 2022-08-17 17:18:47
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -43,6 +43,7 @@
       url: '',    // 资源地址
       element: '' // 参照的元素
     },         // 最大内容可见的对象，time：时间 ms，url：参照的资源地址
+    fid: 0,   // 用户第一次与页面交互（例如当他们单击链接、点按按钮等操作）直到浏览器对交互作出响应的时间
     setFirstScreen: function() {    //自定义首屏时间
       this.firstScreen = _calcCurrentTime();
     },
@@ -153,18 +154,31 @@
     return _getTiming().now;
   }
   /**
+   * 判断当前宿主环境是否支持 PerformanceObserver
+   * 并且支持某个特定的类型
+   */
+   function checkSupportPerformanceObserver(type) {
+    if(!PerformanceObserver) return false;
+    var types = PerformanceObserver.supportedEntryTypes;
+    // 浏览器兼容判断
+    if(types.indexOf(type) === -1) {
+      return false;
+    }
+    return true;
+  }
+  /**
    * 浏览器 LCP 计算
+   * LCP（Largest Contentful Paint）最大内容在可视区域内变得可见的时间
    * https://developer.mozilla.org/en-US/docs/Web/API/LargestContentfulPaint
    */
   function getLCP() {
-    if(!PerformanceObserver) return;
-    var types = PerformanceObserver.supportedEntryTypes;
     var lcpType = 'largest-contentful-paint';
+    var isSupport = checkSupportPerformanceObserver(lcpType);
     // 浏览器兼容判断
-    if(types.indexOf(lcpType) === -1) {
+    if(!isSupport) {
       return;
     }
-    new PerformanceObserver(function(entryList) {
+    new PerformanceObserver(function(entryList, obs) {
       var entries = entryList.getEntries();
       var lastEntry = entries[entries.length - 1];
       shin.lcp = {
@@ -172,10 +186,42 @@
         url: lastEntry.url,
         element: lastEntry.element ? lastEntry.element.outerHTML : ''
       };
+      // 断开此观察者的连接，因为回调仅触发一次
+      obs.disconnect();   
       // buffered 为 true 表示调用 observe() 之前的也算进来
     }).observe({type: lcpType, buffered: true});
   }
   getLCP();
+
+  /**
+   * 浏览器 FID 计算
+   * FID（First Input Delay）用户第一次与页面交互到浏览器对交互作出响应的时间
+   * https://developer.mozilla.org/en-US/docs/Glossary/First_input_delay
+   */
+  function getFID() {
+    var fidType = 'first-input';
+    var isSupport = checkSupportPerformanceObserver(fidType);
+    // 浏览器兼容判断
+    if(!isSupport) {
+      return;
+    }
+    new PerformanceObserver(function(entryList, obs) {
+      const firstInput = entryList.getEntries()[0];
+      // 测量第一个输入事件的延迟
+      shin.fid = _rounded(firstInput.processingStart - firstInput.startTime);
+      /**
+       * 测量第一个输入事件的持续时间
+       * 仅在处理程序中同步完成重要事件处理工作时使用
+       */
+      // const firstInputDuration = firstInput.duration;
+      // 获取本次事件目标的一些信息，比如id。
+      // const targetId = firstInput.target ? firstInput.target.id : 'unknown-target';
+      // 处理第一个输入延迟，也许还有它的持续时间
+      // 断开此观察者的连接，因为回调仅触发一次
+      obs.disconnect();
+    }).observe({type: fidType, buffered: true});
+  }
+  getFID();
   /**
    * 监控页面奔溃情况
    * 计算首屏时间
@@ -307,6 +353,16 @@
     }
 
     /**
+     * FCP（First Contentful Paint）首次有实际内容渲染的时间
+     */
+    if (paint && timing.entryType && paint[1]) {
+      api.firstContentfulPaint = paint[1].startTime - timing.fetchStart;
+      api.firstContentfulPaintStart = paint[1].startTime;   // 记录白屏时间点
+    } else {
+      api.firstContentfulPaint = 0;
+    }
+
+    /**
      * 解析DOM树结构的时间
      * DOM中的所有脚本，包括具有async属性的脚本，都已执行。加载 DOM 中定义的所有页面静态资源（图像、iframe等）
      * LoadEventStart紧跟在Complete之后。 在大多数情况下，这2个指标是相等的。
@@ -428,6 +484,8 @@
     obj.referer = window.location.href;    //来源地址
     // 若未定义或未计算到，则默认为用户可操作时间
     obj.firstScreen = shin.lcp.time || shin.firstScreen || obj.domReadyTime;
+    obj.timing.lcp = shin.lcp;  //记录LCP对象
+    obj.timing.fid = shin.fid;  //记录FID对象
     // 静态资源列表
     var resources = performance.getEntriesByType('resource');
     var newResources = [];
