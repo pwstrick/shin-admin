@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-26 17:22:19
- * @LastEditTime: 2022-07-12 16:26:19
+ * @LastEditTime: 2022-08-17 17:24:31
  * @LastEditors: strick
  * @Description: 
  * @FilePath: /strick/shin-admin/src/pages/monitor/pedashboard/index.js
@@ -18,7 +18,7 @@ import Waterfall from './components/Waterfall';
 import Flow from './components/Flow';
 
 function Pedashboard({
-  dispatch, performanceList, resourceList, isShowWaterfall,
+  dispatch, performanceList, resourceList, isShowWaterfall, measure
 }) {
   const queryProps = {
     url: api.monitorPerformanceGet,
@@ -33,17 +33,25 @@ function Pedashboard({
     ],
     callback: (response) => {
       if (!response.data) return;
-      const { resource } = response.data;
+      const { resource, paint, screen } = response.data;
       resource && dispatch({
         type: 'monitorPeDashboard/showWaterfall',
-        payload: { isShowWaterfall: true, resourceList: JSON.parse(resource) },
+        payload: { 
+          isShowWaterfall: true, 
+          resourceList: JSON.parse(resource),
+          measure: { paint, screen },
+        },
       });
     },
   };
-  const onShowFall = (resource) => {
+  const onShowFall = ({ resource, paint, screen }) => {
     resource && dispatch({
       type: 'monitorPeDashboard/showWaterfall',
-      payload: { isShowWaterfall: true, resourceList: JSON.parse(resource) },
+      payload: { 
+        isShowWaterfall: true, 
+        resourceList: JSON.parse(resource),
+        measure: { paint, screen },
+      },
     });
     setTimeout(() => {
       const element = document.getElementById('waterfall');
@@ -97,7 +105,7 @@ function Pedashboard({
           </p>
           <p>{record.identity}</p>
           <p>{record.referer}</p>
-          { record.resource ? <a onClick={() => onShowFall(record.resource)}>资源瀑布图</a> : null}
+          { record.resource ? <a onClick={() => onShowFall(record)}>资源瀑布图</a> : null}
         </>
       ),
     }),
@@ -150,7 +158,7 @@ function Pedashboard({
       <Table columns={columns} dataSource={performanceList} rowKey="id" pagination={false} style={{ marginBottom: 20 }} />
       <Prompt {...prompt2Props} />
       <Query {...queryProps} />
-      {isShowWaterfall ? <Waterfall resource={resourceList} /> : null}
+      {isShowWaterfall ? <Waterfall resource={resourceList} measure={measure} /> : null}
       <Prompt {...prompt3Props} />
       <Flow />
       <Prompt {...promptProps} />

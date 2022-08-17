@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2022-07-07 11:34:32
- * @LastEditTime: 2022-07-12 16:25:58
+ * @LastEditTime: 2022-08-17 17:27:07
  * @Description: 资源瀑布图
  * @FilePath: /strick/shin-admin/src/pages/monitor/pedashboard/components/Waterfall.js
  */
@@ -12,7 +12,7 @@ import { connect } from 'dva';
 
 require('components/Common/Chart');
 
-function Waterfall({ resource }) {
+function Waterfall({ resource, measure }) {
   // 图表变量
   const [charts] = useState({});// setCharts
   /**
@@ -39,6 +39,34 @@ function Waterfall({ resource }) {
         labels,
         datasets: [
           {
+            backgroundColor: '#F60',
+            borderColor: '#F60',
+            borderWidth: 1,
+            type: 'line',
+            label: '白屏时间',
+            data: [{
+              x: measure.paint,
+              y: 0,
+            }, {
+              x: measure.paint,
+              y: 1000,
+            }],
+          },
+          {
+            backgroundColor: '#000',
+            borderColor: '#000',
+            borderWidth: 1,
+            type: 'line',
+            label: '首屏时间',
+            data: [{
+              x: measure.screen,
+              y: 0,
+            }, {
+              x: measure.screen,
+              y: 1000,
+            }],
+          },
+          {
             backgroundColor: 'rgb(54, 162, 235)',
             label: '资源瀑布图',
             data,
@@ -53,11 +81,18 @@ function Waterfall({ resource }) {
           callbacks: {
             // 聚焦时显示的信息
             label(tooltipItem) {
-              return [
-                resource[tooltipItem.index].name,
-                resource[tooltipItem.index].duration,
-                tooltipItem.value,
-              ];
+              switch (tooltipItem.datasetIndex) {
+                case 0:
+                  return [`paint：${measure.paint}`];
+                case 1:
+                  return [`screen：${measure.screen}`];
+                default:
+                  return [
+                    resource[tooltipItem.index].name,
+                    resource[tooltipItem.index].duration,
+                    tooltipItem.value,
+                  ];
+              }
             },
           },
         },
