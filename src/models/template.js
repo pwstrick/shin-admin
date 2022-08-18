@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2021-01-04 11:51:35
- * @LastEditTime: 2022-01-26 11:08:18
+ * @LastEditTime: 2022-08-18 18:02:22
  * @Description: 模板数据处理
  * @FilePath: /strick/shin-admin/src/models/template.js
  */
@@ -129,7 +129,8 @@ export default {
       showCreate(state, { payload }) {
         return {
           ...state,
-          [setCreatingModalName(payload.modalName)]: true
+          [setCreatingModalName(payload.modalName)]: true,
+          record: {}
         };
       },
       hideCreate(state, { payload }) {
@@ -162,7 +163,7 @@ export default {
           queryLoading: false,    //取消所有Loading
           listLoading: false,
           [setCreatingModalName(modalName)]: false,
-          record: {},
+          // record: {},    // 当弹框中的控件比较多时，点击弹框确认按钮会出现长时间的卡顿
           [setListName(listName, "selectedItem")]: {
             selectedRowKeys: [],
             selectedRows: []
