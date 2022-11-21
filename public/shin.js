@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-08-17 17:18:47
+ * @LastEditTime: 2022-11-21 16:41:52
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -58,10 +58,48 @@
       pkey: "",         //性能监控的项目key
       subdir: "",       //一个项目下的子目录
       rate: 5,          //随机采样率，用于性能搜集
+      version: '',  // 版本，便于追查出错源
+      identity: '', //可自定义的身份信息字段
     }
   };
   
   var shin = defaults;
+
+  /**
+   * 判断是否在热拉APP中
+   */
+   function isApp() {
+    var reg = /xxx\s?\//i;
+    return reg.test(navigator.userAgent);
+  }
+  /**
+   * 在客户端中埋入可识别的身份信息，例如userId
+   * 这段代码可自行修改
+   */
+  function injectIdentity(identity) {
+    // 若不是热拉APP或已经指定身份信息，则返回
+    if(!isApp() || identity) return;
+    // 在JSBridge成功调用后的回调函数
+    window.getMonitorUserSuccess = function(result) {
+      try {
+        var json = JSON.parse(result);
+        shin.param.identity = json.data.userId;
+      }catch(e) {
+        // console.error(e.message);
+      }
+    };
+    // 通过JSBridge读取用户信息
+    var iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = 'xxx://com.user/getInfo?callback=getMonitorUserSuccess';
+    /**
+     * 需要加个定时器，因为调用document.body时，DOM还未存在
+     * Uncaught TypeError: Cannot read property 'appendChild' of null
+     */
+    setTimeout(() => {
+      document.body.appendChild(iframe);
+    }, 0); 
+  }
   /**
    * 自定义参数
    */
@@ -75,6 +113,8 @@
     }
     //为原生对象注入自定义行为
     injectConsole(this.param.isDebug);
+    // 埋入身份信息
+    injectIdentity(this.param.identity);
   };
 
   /**
@@ -972,8 +1012,9 @@
     //页面级的缓存而非全站缓存
     var identity = sessionStorage.getItem(key);
     if(!identity) {
-      //生成标识
-      identity = Number(Math.random().toString().substr(3, 3) + Date.now()).toString(36);
+      // 生成标识
+      identity = Number(Math.random().toString().substring(3, 6) + Date.now()).toString(36);
+      shin.param.identity && (identity = identity + '-' + shin.param.identity); // 与自定义的身份字段合并
       sessionStorage.setItem(key, identity);
     }
     return identity;
