@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-04 18:27:12
- * @LastEditTime: 2021-04-26 14:37:47
+ * @LastEditTime: 2022-11-24 15:28:35
  * @LastEditors: strick
  * @Description: 列表模板中的过滤条件，可按回车直接提交
  * @FilePath: /strick/shin-admin/src/components/Common/Template/List/Query.js
@@ -17,6 +17,7 @@ const FormItem = Form.Item;
  * btns：按钮回调事件集合
  *    formatValues()：自定义函数，格式化读取到的字段值
  *    fieldsValues：无需定义，默认提供的属性，表单中的字段值
+ *    currentForm: 无需配置，读取当前组件的Form表单
  * callback：自定义的回调函数，参数是列表数据
  * form：由 Form.create() 创建
  * Card组件：https://3x.ant.design/components/card-cn/
@@ -45,6 +46,7 @@ const Query = ({ url, listName, type="list", controls, btns={}, callback, state,
   };
   // 字段读取
   btns.fieldsValues = formatValues ? formatValues(getFieldsValue()) : getFieldsValue();
+  btns.currentForm = form;
   const func = type === "list" ? listQuery : formQuery;
   return <Card style={{ marginBottom: 20 }}>
     { func(onClick, getFieldDecorator, controls, state) }

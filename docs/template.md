@@ -453,6 +453,7 @@ const btnsProps = {
 * btns：按钮回调事件集合
   * formatValues()：自定义函数，格式化读取到的字段值
   * fieldsValues：无需定义，默认提供的属性，表单中的字段值
+  * currentForm: 无需配置，读取当前组件的Form表单
 * callback：自定义的回调函数，参数是列表数据
 * form：由 Form.create() 创建
 ```javascript
