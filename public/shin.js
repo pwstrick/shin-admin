@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-11-21 16:41:52
+ * @LastEditTime: 2022-11-30 15:10:10
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -211,14 +211,14 @@
    * LCP（Largest Contentful Paint）最大内容在可视区域内变得可见的时间
    * https://developer.mozilla.org/en-US/docs/Web/API/LargestContentfulPaint
    */
-  function getLCP() {
+   function getLCP() {
     var lcpType = 'largest-contentful-paint';
     var isSupport = checkSupportPerformanceObserver(lcpType);
     // 浏览器兼容判断
     if(!isSupport) {
       return;
     }
-    new PerformanceObserver(function(entryList, obs) {
+    var po = new PerformanceObserver(function(entryList) {
       var entries = entryList.getEntries();
       var lastEntry = entries[entries.length - 1];
       shin.lcp = {
@@ -226,10 +226,19 @@
         url: lastEntry.url,
         element: lastEntry.element ? lastEntry.element.outerHTML : ''
       };
-      // 断开此观察者的连接，因为回调仅触发一次
-      obs.disconnect();   
-      // buffered 为 true 表示调用 observe() 之前的也算进来
-    }).observe({type: lcpType, buffered: true});
+    });
+    // buffered 为 true 表示调用 observe() 之前的也算进来
+    po.observe({type: lcpType, buffered: true});
+    /**
+     * 当有按键或点击（包括滚动）时，就停止 LCP 的采样
+     * once 参数是指事件被调用一次后就会被移除
+     */
+    ['keydown', 'click'].forEach((type) => {
+      window.addEventListener(type, function() {
+        // 断开此观察者的连接
+        po.disconnect();
+      }, { once: true, capture: true });
+    });
   }
   getLCP();
 
