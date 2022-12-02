@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-11-30 15:10:10
+ * @LastEditTime: 2022-12-02 20:32:12
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -66,7 +66,7 @@
   var shin = defaults;
 
   /**
-   * 判断是否在热拉APP中
+   * 判断是否在APP中
    */
    function isApp() {
     var reg = /xxx\s?\//i;
@@ -565,7 +565,7 @@
    */
   var isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
   var eventName = isIOS ? "pagehide" : "beforeunload";
-  var isNeedHideEvent = true;   // 是否需求触发隐藏事件
+  var isNeedHideEvent = true;   // 是否需要触发隐藏事件
   window.addEventListener(eventName, function() {
     isNeedHideEvent && sendBeacon();
   }, false);
