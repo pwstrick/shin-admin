@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-02 20:32:12
+ * @LastEditTime: 2022-12-06 16:16:35
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -142,6 +142,20 @@
         // 关闭定时器
         clearInterval(timer);
         // worker = null;
+        // 兜底白屏算法，可根据自身业务定义
+      } else if(document.body.clientHeight === 0) {
+        // 查询第一个div
+        var currentDiv = document.querySelector('div');
+        // 增加 html 字段是为了验证是否出现了误报
+        handleError({
+          type: ERROR_CRASH,
+          desc: {
+            prompt: '页面没有高度',
+            url: location.href,
+            html: currentDiv ? currentDiv.innerHTML : ''
+          },
+        });
+        clearInterval(timer);
       }
       // worker && worker.postMessage({
       //   type: 'heartbeat',
