@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-06 16:16:35
+ * @LastEditTime: 2022-12-07 14:32:50
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -715,7 +715,6 @@
       // console.log("errorTarget", errorTarget.nodeName);
       // 过滤掉与业务无关或无意义的错误
       if(event.message === "Script error." ||
-          !event.filename ||
           (event.colno === 0 && event.message === "SyntaxError: Unexpected token ','")) {
         return;
       }
@@ -772,7 +771,11 @@
   function formatLoadError(errorTarget) {
     return {
       type: LOAD_ERROR_TYPE[errorTarget.nodeName.toUpperCase()],
-      desc: errorTarget.baseURI + "@" + (errorTarget.src || errorTarget.href),
+      // desc: `${errorTarget.baseURI}@${errorTarget.src || errorTarget.href}`,
+      desc: {
+        url: errorTarget.baseURI,
+        src: errorTarget.src || errorTarget.href
+      }
       // stack: "no stack"
     };
   }
