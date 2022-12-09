@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-07 14:32:50
+ * @LastEditTime: 2022-12-09 15:42:41
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -181,6 +181,7 @@
     //   });
     // });
     var timer = setInterval(heartbeat, HEARTBEAT_INTERVAL);
+    crashHeartbeat(); // 立即执行一次
     // heartbeat();
     // 5分钟后自动取消定时器
     setTimeout(function() {
@@ -292,8 +293,6 @@
    * 用户在没有滚动时候看到的内容渲染完成并且可以交互的时间
    */
   doc.addEventListener("DOMContentLoaded", function () {
-      // 监控页面奔溃情况
-      monitorCrash(shin.param);
       var isFindLastImg = false,
         allFirsrImgsLoaded = false,
         firstScreenImgs = [];
@@ -585,6 +584,12 @@
   }, false);
   // 在 load 事件中，上报性能参数
   window.addEventListener('load', function() {
+    /**
+     * 监控页面奔溃情况
+     * 原先是在 DOMContentLoaded 事件内触发，经测试发现，当因为脚本错误出现白屏时，两个事件的触发时机会很接近
+     * 在线上监控时发现会有一些误报，HTML是有内容的，那很可能是 DOMContentLoaded 触发时，页面内容还没渲染好
+     */
+    monitorCrash(shin.param);
     // 加定时器是避免在上报性能参数时，loadEventEnd 为 0，因为事件还没执行完毕
     setTimeout(function() {
       sendBeacon();
