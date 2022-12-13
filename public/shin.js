@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-09 15:42:41
+ * @LastEditTime: 2022-12-13 14:41:47
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -674,41 +674,41 @@
   /**
    * 监控资源异常，即无法响应的资源
    */
-   window.addEventListener(
-    "load",
-    function () {
-      // 罗列资源列表，PerformanceResourceTiming类型
-      var resources = performance.getEntriesByType("resource");
-      // 映射initiatorType和错误类型
-      var hashError = {
-        script: ERROR_SCRIPT,
-        link: ERROR_STYLE,
-        // img: ERROR_IMAGE
-      };
-      resources && resources.forEach(function(value) {
-        var type = hashError[value.initiatorType];
-        /**
-         * 非监控资源、响应时间在20秒内、监控资源是ma.gif或shin.js，则结束当前循环
-         */
-        if(!type ||                                   //非监控资源
-          value.duration < 20000  ||                  //20秒内
-          value.name.indexOf("ma.gif") >= 0 ||
-          value.name.indexOf("shin.js") >= 0) {
-          return;
-        }
-        // 若是CSS文件，则过滤脚本文件
-        if(type === ERROR_STYLE && 
-          value.name.indexOf(".js") >= 0) {
-          return;
-        }
-        handleError({
-          type: type,
-          desc: handleNumber(value.toJSON()),
-        });
-      });
-    },
-    false
-  );
+  //  window.addEventListener(
+  //   "load",
+  //   function () {
+  //     // 罗列资源列表，PerformanceResourceTiming类型
+  //     var resources = performance.getEntriesByType("resource");
+  //     // 映射initiatorType和错误类型
+  //     var hashError = {
+  //       script: ERROR_SCRIPT,
+  //       link: ERROR_STYLE,
+  //       // img: ERROR_IMAGE
+  //     };
+  //     resources && resources.forEach(function(value) {
+  //       var type = hashError[value.initiatorType];
+  //       /**
+  //        * 非监控资源、响应时间在20秒内、监控资源是ma.gif或shin.js，则结束当前循环
+  //        */
+  //       if(!type ||                                   //非监控资源
+  //         value.duration < 20000  ||                  //20秒内
+  //         value.name.indexOf("ma.gif") >= 0 ||
+  //         value.name.indexOf("shin.js") >= 0) {
+  //         return;
+  //       }
+  //       // 若是CSS文件，则过滤脚本文件
+  //       if(type === ERROR_STYLE && 
+  //         value.name.indexOf(".js") >= 0) {
+  //         return;
+  //       }
+  //       handleError({
+  //         type: type,
+  //         desc: handleNumber(value.toJSON()),
+  //       });
+  //     });
+  //   },
+  //   false
+  // );
   /**
    * 监控脚本异常
    * https://github.com/BetterJS/badjs-report
