@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-13 14:41:47
+ * @LastEditTime: 2022-12-15 14:21:43
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -731,7 +731,8 @@
       ) {
         handleError(formatLoadError(errorTarget));
       } else {
-        handleError(
+        // 过滤无效错误
+        event.message && handleError(
           formatRuntimerError(
             event.message,
             event.filename,
