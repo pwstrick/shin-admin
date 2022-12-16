@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-15 14:21:43
+ * @LastEditTime: 2022-12-16 15:50:52
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -799,7 +799,10 @@
       type: ERROR_RUNTIME,
       lineno: lineno,
       colno: colno,
-      desc: message + " at " + filename + ":" + lineno + ":" + colno,
+      desc: {
+        prompt: (message + ' at ' + filename + ':' + lineno + ':' + colno),
+        url: location.href
+      },
       // stack: error && (error.stack ? error.stack : "no stack") // IE <9, has no error stack
     };
   }
@@ -1069,7 +1072,10 @@
     // console.log(typeof err, info);
     handleError({
       type: ERROR_REACT,
-      desc: err.toString(),
+      desc: {
+        prompt: err.toString(),
+        url: location.href
+      },
       stack: info.componentStack
     });
   }
@@ -1081,7 +1087,10 @@
     vue.config.errorHandler = function(err, vm, info) {
       handleError({
         type: ERROR_VUE,
-        desc: err.toString(),   //描述
+        desc: {
+          prompt: err.toString(), // 描述
+          url: location.href
+        },
         stack: err.stack,       //堆栈
       });
       // 控制台打印错误
