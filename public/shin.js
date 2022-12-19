@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-16 15:50:52
+ * @LastEditTime: 2022-12-19 15:38:41
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -1049,7 +1049,8 @@
     if(!identity) {
       // 生成标识
       identity = Number(Math.random().toString().substring(3, 6) + Date.now()).toString(36);
-      shin.param.identity && (identity = identity + '-' + shin.param.identity); // 与自定义的身份字段合并
+      // 与自定义的身份字段合并，自定义字段在前，便于使用 ES 的前缀查询
+      shin.param.identity && (identity = shin.param.identity + '-' + identity);
       sessionStorage.setItem(key, identity);
     }
     return identity;
