@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-25 15:21:41
- * @LastEditTime: 2021-09-06 11:26:59
+ * @LastEditTime: 2022-12-21 17:32:23
  * @LastEditors: strick
  * @Description: 前端监控面板
  * @FilePath: /strick/shin-admin/src/pages/monitor/dashboard/index.js

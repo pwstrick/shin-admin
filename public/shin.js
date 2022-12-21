@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-19 15:38:41
+ * @LastEditTime: 2022-12-21 17:30:51
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -49,6 +49,7 @@
     },
     //可自定义的参数
     param: {
+      isRecord: true, // 是否打开错误
       isDebug: false,   //默认是非调试环境，而在调试中时，将不会重写 console.log
       isCrash: false,   //是否监控页面奔溃
       validateCrash: function() {},    //自定义奔溃规则，例如页面白屏判断的条件，返回值包括 {success: true, prompt:'提示'}
@@ -115,7 +116,57 @@
     injectConsole(this.param.isDebug);
     // 埋入身份信息
     injectIdentity(this.param.identity);
+    // 记录用户行为
+    recordPage(this.param.isRecord);
   };
+
+  /**
+   * 记录用户行为
+   */
+  var recordEventsMatrix = [[]];
+  function recordPage(isRecord) {
+     if (!isRecord) { return; }
+     var script = document.createElement('script');
+     script.src = '//cdn.jsdelivr.net/npm/rrweb@latest/dist/rrweb.min.js';
+     // 开始监控页面行为
+     script.onload = function() {
+       rrweb.record({
+         emit(event, isCheckout) {
+           // isCheckout 是一个标识，告诉你重新制作了快照
+           if (isCheckout) {
+             // 最多保留 3 段行为记录
+             var deleteCount = recordEventsMatrix.length - 2;
+             deleteCount > 0 && recordEventsMatrix.splice(0, deleteCount);
+             recordEventsMatrix.push([]);
+           }
+           var lastEvents = recordEventsMatrix[recordEventsMatrix.length - 1];
+           lastEvents.push(event);
+         },
+         checkoutEveryNms: 10 * 1000, // 每 10 秒重新制作快照
+       });
+     };
+     /**
+      * 需要加个定时器，因为调用document.body时，DOM还未存在
+      * Uncaught TypeError: Cannot read property 'appendChild' of null
+      */
+     setTimeout(() => {
+       document.body.append(script);
+     }, 500);
+   }
+   /**
+    * 读取最近 20 秒的行为记录
+    */
+  function getRecentRecord() {
+     var len = recordEventsMatrix.length;
+     if(len === 0) return '';
+     var events;
+     if(len.length >= 2) {
+       events = recordEventsMatrix[len - 2].concat(recordEventsMatrix[len - 1]);
+     }else {
+       events = recordEventsMatrix[len - 1];
+     }
+     return JSON.stringify(events);
+   }
 
   /**
    * 基于 Web Worker 心跳的方案，监控页面奔溃情况
@@ -128,7 +179,7 @@
     // var worker = new Worker(param.swSrc);
     var HEARTBEAT_INTERVAL = 5 * 1000; // 每五秒发一次心跳
     // var sessionId = getIdentity();
-    var heartbeat = function () {
+    var crashHeartbeat = function () {
       var result = validateCrash();
       if(result && !result.success) {
         // 符合自定义的奔溃规则
@@ -180,7 +231,7 @@
     //     id: sessionId
     //   });
     // });
-    var timer = setInterval(heartbeat, HEARTBEAT_INTERVAL);
+    var timer = setInterval(crashHeartbeat, HEARTBEAT_INTERVAL);
     crashHeartbeat(); // 立即执行一次
     // heartbeat();
     // 5分钟后自动取消定时器
@@ -1063,7 +1114,8 @@
     obj.token = shin.param.token;
     obj.subdir = shin.param.subdir;
     obj.identity = getIdentity();
-    return encodeURIComponent(JSON.stringify(obj));
+    // return encodeURIComponent(JSON.stringify(obj));
+    return JSON.stringify(obj);
   }
 
   /**
@@ -1108,9 +1160,31 @@
    * 推送监控信息
    */
   shin.send = function (data) {
-    var ts = new Date().getTime().toString();
-    var img = new Image(0, 0);
-    img.src = shin.param.src + "?m=" + _paramify(data) + "&ts=" + ts;
+    // var ts = new Date().getTime().toString();
+    // var img = new Image(0, 0);
+    // img.src = shin.param.src + "?m=" + _paramify(data) + "&ts=" + ts;
+    var m = _paramify(data);
+    // 大于8000的长度，就不在上报，废弃掉
+    if(m.length >= 8000) {
+      return;
+    }
+    var body = { m: m };
+    var record;
+    // 当前是一条错误日志，并且描述的是奔溃
+    if(data.category === ACTION_ERROR && data.data.type === ERROR_CRASH) {
+      // 读取行为记录
+      record = getRecentRecord();
+      // 只有当有内容时，才发送行为记录
+      record.length > 0 && (body.r = record);
+    }
+    // 如果修改headers，就会多一次OPTIONS预检请求
+    fetch(shin.param.src, {
+      method: 'POST',
+      // headers: {
+      //   'Content-Type': 'application/json',
+      // },
+      body: JSON.stringify(body),
+    });
   };
   window.shin = shin;
 })(this);

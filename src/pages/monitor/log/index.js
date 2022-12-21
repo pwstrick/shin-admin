@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-25 15:21:48
- * @LastEditTime: 2021-09-06 11:56:09
+ * @LastEditTime: 2022-12-21 17:39:45
  * @LastEditors: strick
  * @Description: 监控日志明细
  * @FilePath: /strick/shin-admin/src/pages/monitor/log/index.js
@@ -34,7 +34,6 @@ const MonitorLog = ({ dispatch, keyword, match }) => {
       }
     });
   }
-  
   /**
    * 解析日志内容的展现格式
    */
@@ -113,7 +112,6 @@ const MonitorLog = ({ dispatch, keyword, match }) => {
       }),
     ],
   };
-
   // Query组件属性
   const { RangePicker } = DatePicker;
   const generateChart = () => {
