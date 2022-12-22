@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-21 17:30:51
+ * @LastEditTime: 2022-12-22 11:42:22
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -145,13 +145,7 @@
          checkoutEveryNms: 10 * 1000, // 每 10 秒重新制作快照
        });
      };
-     /**
-      * 需要加个定时器，因为调用document.body时，DOM还未存在
-      * Uncaught TypeError: Cannot read property 'appendChild' of null
-      */
-     setTimeout(() => {
-       document.body.append(script);
-     }, 500);
+     document.head.append(script);
    }
    /**
     * 读取最近 20 秒的行为记录
