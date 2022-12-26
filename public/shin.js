@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-26 14:40:10
+ * @LastEditTime: 2022-12-26 17:04:42
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -52,7 +52,7 @@
       isRecord: true, // 是否打开错误
       isDebug: false,   //默认是非调试环境，而在调试中时，将不会重写 console.log
       isCrash: false,   //是否监控页面奔溃
-      validateCrash: function() {},    //自定义奔溃规则，例如页面白屏判断的条件，返回值包括 {success: true, prompt:'提示'}
+      validateCrash: null,    //自定义奔溃规则，例如页面白屏判断的条件，返回值包括 {success: true, prompt:'提示'}
       src: "//127.0.0.1:8000/api/ma.gif",     //请求发送数据的地址（监控）
       // swSrc: '/sw.js',                  //Web Worker地址，用于监控页面奔溃
       psrc: "//127.0.0.1:8000/api/pe.gif",    //请求发送数据的地址（性能）
@@ -165,12 +165,27 @@
    * 白屏计算规则
    */
   function _isWhiteScreen() {
-    // 罗列 body 的子元素
-    var children = [].slice.call(document.body.children);
-    // 过滤出高度不为 0 的子元素
-    var visibles = children.filter(function(element) {
-      return element.clientHeight > 0;
-    });
+    var visibles = [];
+    // 深度优先遍历子元素
+    var dfs = (node) => {
+      var tagName = node.tagName.toLowerCase();
+      // 若已找到一个有高度的元素，则结束搜索
+      if(visibles.length > 0) return;
+      // 若元素隐藏，则结束搜索
+      if (node.style.display === 'none') return;
+      // 若元素有高度并且不是 body 元素，则结束搜索
+      if(node.clientHeight > 0 && tagName !== 'body') {
+        visibles.push(node);
+        return;
+      }
+      node.children && [].slice.call(node.children).forEach((child) => {
+        var tagName = child.tagName.toLowerCase();
+        // 过滤脚本和样式元素
+        if(tagName === 'script' || tagName === 'link') return;
+        dfs(child);
+      });
+    };
+    dfs(document.body);
     return visibles.length === 0;
   }
   /**
@@ -185,21 +200,23 @@
     var HEARTBEAT_INTERVAL = 5 * 1000; // 每五秒发一次心跳
     // var sessionId = getIdentity();
     var crashHeartbeat = function () {
-      var result = validateCrash();
-      if(result && !result.success) {
+      // 是否自定义了规则
+      if(validateCrash) {
+        var result = validateCrash();
         // 符合自定义的奔溃规则
-        handleError({
-          type: ERROR_CRASH,
-          desc: {
-            prompt: result.prompt,
-            url: window.location.href
-          },
-        });
-        // 关闭定时器
-        clearInterval(timer);
-        // worker = null;
-        // 兜底白屏算法，可根据自身业务定义
-      } else if(_isWhiteScreen()) {
+        if (result && !result.success) {
+          handleError({
+            type: ERROR_CRASH,
+            desc: {
+              prompt: result.prompt,
+              url: location.href,
+            },
+          });
+          // 关闭定时器
+          clearInterval(timer);
+          // worker = null;
+        }
+      } else if(_isWhiteScreen()) {  // 兜底白屏算法，可根据自身业务定义
         // 查询第一个div
         var currentDiv = document.querySelector('div');
         // 增加 html 字段是为了验证是否出现了误报
