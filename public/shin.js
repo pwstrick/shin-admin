@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-26 17:04:42
+ * @LastEditTime: 2022-12-26 17:24:28
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -662,7 +662,9 @@
      * 原先是在 DOMContentLoaded 事件内触发，经测试发现，当因为脚本错误出现白屏时，两个事件的触发时机会很接近
      * 在线上监控时发现会有一些误报，HTML是有内容的，那很可能是 DOMContentLoaded 触发时，页面内容还没渲染好
      */
-    monitorCrash(shin.param);
+    setTimeout(function() {
+      monitorCrash(shin.param);
+    }, 1000);
     // 加定时器是避免在上报性能参数时，loadEventEnd 为 0，因为事件还没执行完毕
     setTimeout(function() {
       sendBeacon();
