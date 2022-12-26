@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-22 11:42:22
+ * @LastEditTime: 2022-12-26 14:40:10
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -161,7 +161,18 @@
      }
      return JSON.stringify(events);
    }
-
+  /**
+   * 白屏计算规则
+   */
+  function _isWhiteScreen() {
+    // 罗列 body 的子元素
+    var children = [].slice.call(document.body.children);
+    // 过滤出高度不为 0 的子元素
+    var visibles = children.filter(function(element) {
+      return element.clientHeight > 0;
+    });
+    return visibles.length === 0;
+  }
   /**
    * 基于 Web Worker 心跳的方案，监控页面奔溃情况
    */
@@ -188,7 +199,7 @@
         clearInterval(timer);
         // worker = null;
         // 兜底白屏算法，可根据自身业务定义
-      } else if(document.body.clientHeight === 0) {
+      } else if(_isWhiteScreen()) {
         // 查询第一个div
         var currentDiv = document.querySelector('div');
         // 增加 html 字段是为了验证是否出现了误报
