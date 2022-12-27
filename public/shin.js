@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-26 17:24:28
+ * @LastEditTime: 2022-12-27 14:07:53
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -664,7 +664,7 @@
      */
     setTimeout(function() {
       monitorCrash(shin.param);
-    }, 1000);
+    }, 2000);
     // 加定时器是避免在上报性能参数时，loadEventEnd 为 0，因为事件还没执行完毕
     setTimeout(function() {
       sendBeacon();
