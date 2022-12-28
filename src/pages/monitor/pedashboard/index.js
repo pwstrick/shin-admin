@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-01-26 17:22:19
- * @LastEditTime: 2022-08-17 17:24:31
+ * @LastEditTime: 2022-12-28 17:08:06
  * @LastEditors: strick
  * @Description: 
  * @FilePath: /strick/shin-admin/src/pages/monitor/pedashboard/index.js
@@ -33,13 +33,21 @@ function Pedashboard({
     ],
     callback: (response) => {
       if (!response.data) return;
-      const { resource, paint, screen } = response.data;
+      const {
+        resource, paint, screen, timing,
+      } = response.data;
+      const originalTiming = JSON.parse(timing);
       resource && dispatch({
         type: 'monitorPeDashboard/showWaterfall',
-        payload: { 
-          isShowWaterfall: true, 
+        payload: {
+          isShowWaterfall: true,
           resourceList: JSON.parse(resource),
-          measure: { paint, screen },
+          measure: {
+            paint,
+            screen,
+            ready: originalTiming.domContentLoadedEventStart,
+            load: originalTiming.loadEventStart,
+          },
         },
       });
     },

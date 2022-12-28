@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2022-07-07 11:34:32
- * @LastEditTime: 2022-08-17 17:27:07
+ * @LastEditTime: 2022-12-28 17:07:29
  * @Description: 资源瀑布图
  * @FilePath: /strick/shin-admin/src/pages/monitor/pedashboard/components/Waterfall.js
  */
@@ -14,7 +14,7 @@ require('components/Common/Chart');
 
 function Waterfall({ resource, measure }) {
   // 图表变量
-  const [charts] = useState({});// setCharts
+  const [charts] = useState({});
   /**
   * https://chartjs.bootcss.com/docs/
   * Chart 文档说明
@@ -53,6 +53,34 @@ function Waterfall({ resource, measure }) {
             }],
           },
           {
+            backgroundColor: '#FC0',
+            borderColor: '#FC0',
+            borderWidth: 1,
+            type: 'line',
+            label: 'DOMContentLoaded',
+            data: [{
+              x: measure.ready,
+              y: 0,
+            }, {
+              x: measure.ready,
+              y: 1000,
+            }],
+          },
+          {
+            backgroundColor: '#7cb305',
+            borderColor: '#7cb305',
+            borderWidth: 1,
+            type: 'line',
+            label: 'load',
+            data: [{
+              x: measure.load,
+              y: 0,
+            }, {
+              x: measure.load,
+              y: 1000,
+            }],
+          },
+          {
             backgroundColor: '#000',
             borderColor: '#000',
             borderWidth: 1,
@@ -76,15 +104,26 @@ function Waterfall({ resource, measure }) {
       options: {
         // maintainAspectRatio: false,
         responsive: true,
-        scales: { xAxes: [{ ticks: { beginAtZero: true } }] },
+        scales: {
+          xAxes: [{ ticks: { beginAtZero: true } }],
+          // yAxes: [{ ticks: { beginAtZero: true } }],
+        },
         tooltips: {
           callbacks: {
             // 聚焦时显示的信息
             label(tooltipItem) {
               switch (tooltipItem.datasetIndex) {
+                // case 0: {
+                //   if (tooltipItem.xLabel === measure.paint) { return [`paint：${measure.paint}`]; }
+                //   break;
+                // }
                 case 0:
                   return [`paint：${measure.paint}`];
                 case 1:
+                  return [`DOMContentLoaded：${measure.ready}`];
+                case 2:
+                  return [`load：${measure.load}`];
+                case 3:
                   return [`screen：${measure.screen}`];
                 default:
                   return [
@@ -113,8 +152,7 @@ function Waterfall({ resource, measure }) {
       // 组件卸载时销毁
       destroyChart();
     };
-  }, [charts.waterfall, destroyChart, fillChart, resource]);
-
+  }, [resource]);
   return <canvas id="waterfall" height="150" />;
 }
 
