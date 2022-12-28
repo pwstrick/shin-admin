@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-28 17:03:54
+ * @LastEditTime: 2022-12-28 17:28:42
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -250,6 +250,7 @@
             prompt: '页面没有高度',
             url: location.href,
             html: currentDiv ? currentDiv.innerHTML : '',
+            fontSize: document.documentElement.style.fontSize,  // 根节点的字体大小
             nodes: whiteObj.nodes
           },
         });
