@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-27 14:07:53
+ * @LastEditTime: 2022-12-28 17:03:54
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -166,9 +166,25 @@
    */
   function _isWhiteScreen() {
     var visibles = [];
+    var nodes = []; //遍历到的节点的关键信息，用于查明白屏原因
     // 深度优先遍历子元素
     var dfs = (node) => {
       var tagName = node.tagName.toLowerCase();
+      // 选取节点的属性作记录
+      var attrs = {
+        id: node.id,
+        tag: tagName,
+        className: node.className,
+        display: node.style.display,
+        height: node.clientHeight
+      };
+      if(node.src) {
+        attrs.src = node.src; // 记录图像的地址
+      }
+      if(node.href) {
+        attrs.href = node.href; // 记录链接的地址
+      }
+      nodes.push(attrs);
       // 若已找到一个有高度的元素，则结束搜索
       if(visibles.length > 0) return;
       // 若元素隐藏，则结束搜索
@@ -186,7 +202,10 @@
       });
     };
     dfs(document.body);
-    return visibles.length === 0;
+    return {
+      visibles: visibles,
+      nodes: nodes
+    };
   }
   /**
    * 基于 Web Worker 心跳的方案，监控页面奔溃情况
@@ -216,7 +235,12 @@
           clearInterval(timer);
           // worker = null;
         }
-      } else if(_isWhiteScreen()) {  // 兜底白屏算法，可根据自身业务定义
+      } else {  
+        // 兜底白屏算法，可根据自身业务定义
+        var whiteObj = _isWhiteScreen();
+        if(whiteObj.visibles.length > 0) {
+          return;
+        }
         // 查询第一个div
         var currentDiv = document.querySelector('div');
         // 增加 html 字段是为了验证是否出现了误报
@@ -225,7 +249,8 @@
           desc: {
             prompt: '页面没有高度',
             url: location.href,
-            html: currentDiv ? currentDiv.innerHTML : ''
+            html: currentDiv ? currentDiv.innerHTML : '',
+            nodes: whiteObj.nodes
           },
         });
         clearInterval(timer);
