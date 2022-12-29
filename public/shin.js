@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-28 17:28:42
+ * @LastEditTime: 2022-12-29 13:54:01
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -170,13 +170,14 @@
     // 深度优先遍历子元素
     var dfs = (node) => {
       var tagName = node.tagName.toLowerCase();
+      var rect = node.getBoundingClientRect();
       // 选取节点的属性作记录
       var attrs = {
         id: node.id,
         tag: tagName,
         className: node.className,
         display: node.style.display,
-        height: node.clientHeight
+        height: rect.height
       };
       if(node.src) {
         attrs.src = node.src; // 记录图像的地址
@@ -190,7 +191,7 @@
       // 若元素隐藏，则结束搜索
       if (node.style.display === 'none') return;
       // 若元素有高度并且不是 body 元素，则结束搜索
-      if(node.clientHeight > 0 && tagName !== 'body') {
+      if(rect.height > 0 && tagName !== 'body') {
         visibles.push(node);
         return;
       }
@@ -690,7 +691,7 @@
      */
     setTimeout(function() {
       monitorCrash(shin.param);
-    }, 2000);
+    }, 1000);
     // 加定时器是避免在上报性能参数时，loadEventEnd 为 0，因为事件还没执行完毕
     setTimeout(function() {
       sendBeacon();
