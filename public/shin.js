@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-29 13:54:01
+ * @LastEditTime: 2022-12-29 18:17:04
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -250,7 +250,7 @@
           desc: {
             prompt: '页面没有高度',
             url: location.href,
-            html: currentDiv ? currentDiv.innerHTML : '',
+            html: currentDiv ? _removeQuote(currentDiv.innerHTML) : '',
             fontSize: document.documentElement.style.fontSize,  // 根节点的字体大小
             nodes: whiteObj.nodes
           },
@@ -322,6 +322,12 @@
     return true;
   }
   /**
+   * 去除双引号
+   */
+  function _removeQuote(html) {
+    return html.replace(/"/g, '');
+  }
+  /**
    * 浏览器 LCP 计算
    * LCP（Largest Contentful Paint）最大内容在可视区域内变得可见的时间
    * https://developer.mozilla.org/en-US/docs/Web/API/LargestContentfulPaint
@@ -339,7 +345,7 @@
       shin.lcp = {
         time: _rounded(lastEntry.renderTime || lastEntry.loadTime), // 取整
         url: lastEntry.url,
-        element: lastEntry.element ? lastEntry.element.outerHTML : ''
+        element: lastEntry.element ? _removeQuote(lastEntry.element.outerHTML) : ''
       };
     });
     // buffered 为 true 表示调用 observe() 之前的也算进来
@@ -1030,32 +1036,43 @@
   /**
    * 全局监听事件
    */
-  var eventHandle = function(eventType, detect) {
-    return function(e) {
-      if(!detect(e)) {
+   function _eventHandle(eventType, detect) {
+    return function (e) {
+      if (!detect(e)) {
         return;
       }
       handleAction(ACTION_EVENT, {
         type: eventType,
-        desc: e.target.outerHTML
+        desc: _removeQuote(e.target.outerHTML), // 去除双引号
       });
     };
-  }
-  // 监听点击事件
-  window.addEventListener("click", eventHandle("click", function(e) {
-    var nodeName = e.target.nodeName.toLowerCase();
+  };
+  /**
+   * 监听点击事件
+   * window.onclick 支持 IE9+，若要支持 IE8 浏览器，可以改成 document.onclick
+   */
+  window.addEventListener('click', _eventHandle('click', function(e) {
+    var node = e.target;
+    var nodeName = node.nodeName.toLowerCase();
+    // 若是 body 元素，则不记录
+    if(nodeName === 'body') {
+      return false;
+    }
     // 白名单
-    if(nodeName !== "a" &&
-        nodeName !== "button") {
+    if (nodeName !== 'a'
+        && nodeName !== 'button'
+        && nodeName !== 'li'
+        && node.className.indexOf('tabs') === -1) // 菜单栏样式
+    {
       return false;
     }
     // 过滤 a 元素
-    if(nodeName === "a") {
-      var href = e.target.getAttribute("href");
-      if(!href || href !== "#" || href.toLowerCase() !== "javascript:void(0)") {
-        return false;
-      }
-    }
+    // if (nodeName === 'a') {
+    //   var href = e.target.getAttribute('href');
+    //   if (!href || href !== '#' || href.toLowerCase() !== 'javascript:void(0)') {
+    //     return false;
+    //   }
+    // }
     return true;
   }), false);
 
