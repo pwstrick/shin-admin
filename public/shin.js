@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-29 18:17:04
+ * @LastEditTime: 2022-12-30 15:11:59
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -1062,7 +1062,8 @@
     if (nodeName !== 'a'
         && nodeName !== 'button'
         && nodeName !== 'li'
-        && node.className.indexOf('tabs') === -1) // 菜单栏样式
+        // 先判断是否包含 indexOf 方法，再根据样式特征判断，例如菜单栏样式
+        && (node.className.indexOf && node.className.indexOf('tabs') === -1))
     {
       return false;
     }
