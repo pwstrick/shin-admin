@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2022-12-30 15:11:59
+ * @LastEditTime: 2023-01-03 14:43:55
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
@@ -98,8 +98,8 @@
      * Uncaught TypeError: Cannot read property 'appendChild' of null
      */
     setTimeout(() => {
-      document.body.appendChild(iframe);
-    }, 0); 
+      document.body && document.body.appendChild(iframe);
+    }, 500); 
   }
   /**
    * 自定义参数
@@ -1106,18 +1106,40 @@
   }
   
   /**
-   * 全局监听跳转
+   * 在路由中注入自定义逻辑
    */
-  var _onPopState = window.onpopstate;
-  window.onpopstate = function(args) {
-    var href = window.location.href;
+  function injectRouter() {
+    var href = location.href;
     handleAction(ACTION_REDIRECT, {
       refer: shin.refer,
-      current: href
+      current: href,
     });
     shin.refer = href;
-    _onPopState && _onPopState.apply(this, args);
   }
+  /**
+   * 全局监听跳转
+   * 点击后退、前进按钮或者调用 history.back()、history.forward()、history.go() 方法才会触发 popstate 事件
+   * 点击 <a href=/xx/yy#anchor>hash</a> 按钮也会触发 popstate 事件
+   */
+  var _onPopState = window.onpopstate;
+  window.onpopstate = function (args) {
+    injectRouter();
+    _onPopState && _onPopState.apply(this, args);
+  };
+  /**
+   * 监听 pushState() 和 replaceState() 两个方法
+   */
+  var bindEventListener = function(type) {
+  var historyEvent = history[type];
+    return function() {
+      // 触发 history 的原始事件
+      var newEvent = historyEvent.apply(this, arguments);
+      injectRouter();
+      return newEvent;
+    };
+  };
+  history.pushState = bindEventListener('pushState');
+  history.replaceState = bindEventListener('replaceState');
 
   /**
    * 打印特性 key:value格式
