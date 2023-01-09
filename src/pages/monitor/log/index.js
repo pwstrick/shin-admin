@@ -1,7 +1,7 @@
 /*
  * @Author: strick
  * @Date: 2021-02-25 15:21:48
- * @LastEditTime: 2022-12-21 17:39:45
+ * @LastEditTime: 2023-01-09 15:39:06
  * @LastEditors: strick
  * @Description: 监控日志明细
  * @FilePath: /strick/shin-admin/src/pages/monitor/log/index.js
@@ -76,6 +76,15 @@ const MonitorLog = ({ dispatch, keyword, match }) => {
       <div>注意：日志数据只保留两周，Source Map文件保留三周</div>
     </>
   };
+  /**
+   * 点击列表中的身份
+   */
+  const identityClick = (identity) => {
+    queryProps.btns.currentForm.setFieldsValue({
+      identity,
+      category: undefined,
+    });
+  };
   // List组件属性
   const listProps = {
     url: api.monitorList,
@@ -89,7 +98,7 @@ const MonitorLog = ({ dispatch, keyword, match }) => {
         <p>{value}</p>
         <p>{formatDate(record.ctime * 1000, 'MM-DD HH:mm:ss')}</p>
         <p>{record.source}</p>
-        <p>{record.identity}</p>
+        <a onClick={() => identityClick(record.identity)}>{record.identity}</a>
       </> }),
       setColumn('类别', 'category', { width: '100px', render: (value, record) => <>
         <p>{value}</p>

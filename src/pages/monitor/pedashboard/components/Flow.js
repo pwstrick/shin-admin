@@ -2,7 +2,7 @@
  * @Author: strick
  * @LastEditors: strick
  * @Date: 2022-07-25 14:06:51
- * @LastEditTime: 2022-07-27 11:16:33
+ * @LastEditTime: 2023-01-09 15:43:14
  * @Description: 时序流程图
  * @FilePath: /strick/shin-admin/src/pages/monitor/pedashboard/components/Flow.js
  */
@@ -236,6 +236,10 @@ function Flow() {
           control: <Input placeholder="性能日志编号" style={{ width: 200 }} />,
         },
         {
+          name: 'identity',
+          control: <Input placeholder="身份" style={{ width: 200 }} />,
+        },
+        {
           name: 'params',
           control: <Cascader placeholder="参数和范围" options={MONITOR_PERFORMANCE_CASCADER} />,
         },
@@ -244,6 +248,10 @@ function Flow() {
         {
           name: 'day',
           control: <RangePicker format="YYYY-MM-DD HH:mm" showTime />,
+        },
+        {
+          name: 'path',
+          control: <Input placeholder="来源路径" style={{ width: 200 }} />,
         },
         'search',
       ],
