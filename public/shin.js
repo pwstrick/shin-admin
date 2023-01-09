@@ -1,12 +1,188 @@
 /*
  * @Author: strick
  * @Date: 2021-02-23 11:01:46
- * @LastEditTime: 2023-01-03 14:43:55
+ * @LastEditTime: 2023-01-09 11:29:48
  * @LastEditors: strick
  * @Description: 前端监控 SDK
  * @FilePath: /strick/shin-admin/public/shin.js
  */
 /* eslint-disable */
+/**
+ * FMP 计算
+ */
+(function (window) {
+  var IGNORE_TAG_SET = ["SCRIPT", "STYLE", "META", "HEAD", "LINK"];
+  var TAG_WEIGHT_MAP = {
+      SVG: 2,
+      IMG: 2,
+      CANVAS: 4,
+      OBJECT: 4,
+      EMBED: 4,
+      VIDEO: 4
+  };
+  var WW = window.innerWidth;
+  var WH = window.innerHeight;
+  var cacheTrees = []; // 缓存每次更新的DOM元素
+  var FMP_ATTRIBUTE = '_ts';
+  var fmpObserver;
+  var callbackCount = 0;
+  /**
+   * 开始监控DOM的变化
+   */
+  function initFMP() {
+    fmpObserver = new MutationObserver(() => {
+      var mutationsList = [];
+      // 为 HTML 元素打标记，记录是哪一次的 DOM 更新
+      var doTag = function(target, callbackCount) {
+        var childrenLen = target.children ? target.children.length : 0;
+        // 结束递归
+        if(childrenLen === 0)
+         return;
+        for (var children = target.children, i = childrenLen - 1; i >= 0; i--) {
+          var child = children[i];
+          var tagName = child.tagName;
+          if (child.getAttribute(FMP_ATTRIBUTE) === null && 
+            IGNORE_TAG_SET.indexOf(tagName) === -1  // 过滤掉忽略的元素
+          ) {
+            child.setAttribute(FMP_ATTRIBUTE, callbackCount);
+            mutationsList.push(child);  // 记录更新的元素
+          }
+          // 继续递归
+          doTag(child, callbackCount);
+        }
+      };
+      // 从 body 元素开始遍历
+      document.body && doTag(document.body, callbackCount++);
+      cacheTrees.push({
+        ts: performance.now(),
+        children: mutationsList  
+      });
+      // console.log("mutationsList", performance.now(), mutationsList);
+    });
+    fmpObserver.observe(document, {
+      childList: true,    // 监控子元素
+      subtree: true   // 监控后代元素
+    });
+  }
+  initFMP();
+  /**
+   * 是否超出屏幕外
+   */
+  function isOutScreen(node) {
+    var { left, top } = node.getBoundingClientRect();
+    return  WH < top || WW < left;
+  }
+  /**
+   * 读取 FMP 信息
+   */
+  function getFMP() {
+    fmpObserver.disconnect(); // 停止监听
+    var maxObj = {
+      score: -1,  //最高分
+      elements: [],   // 首屏元素
+      ts: 0   // DOM变化时的时间戳
+    };
+    // 遍历DOM数组，并计算它们的得分
+    cacheTrees.forEach(tree => {
+      var score = 0;
+      // 首屏内的元素
+      var firstScreenElements = [];
+      tree.children.forEach((node) => {
+        // 只记录元素
+        if(node.nodeType !== 1 || IGNORE_TAG_SET.indexOf(node.tagName) >= 0) {
+          return;
+        }
+        var { height } = node.getBoundingClientRect();
+        // 过滤高度为 0，在首屏外的元素
+        if(height > 0 && !isOutScreen(node)) {
+          firstScreenElements.push(node);
+        }
+      });
+      // 若首屏中的一个元素是另一个元素的后代，则过滤掉该祖先元素
+      firstScreenElements = firstScreenElements.filter(node => {
+        // 只要找到一次包含关系，就过滤掉
+        var notFind = !firstScreenElements.some(item => node !== item && node.contains(item));
+        // 计算总得分
+        if(notFind) {
+          score += caculateScore(node);
+        }
+        return notFind;
+      });
+      // 得到最高值
+      if(maxObj.score < score) {
+        maxObj.score = score;
+        maxObj.elements = firstScreenElements;
+        maxObj.ts = tree.ts;
+      }
+    });
+    // 在得分最高的首屏元素中，找出最长的耗时
+    return getElementMaxTimeConsuming(maxObj.elements, maxObj.ts);
+  }
+  /**
+   * 计算元素分值
+   */
+  function caculateScore(node) {
+    var { width, height } = node.getBoundingClientRect();
+    var weight = TAG_WEIGHT_MAP[node.tagName] || 1;
+    if (
+      weight === 1 &&
+      window.getComputedStyle(node)['background-image'] && // 读取CSS样式中的背景图属性
+      window.getComputedStyle(node)['background-image'] !== "initial"
+    ) {
+      weight = TAG_WEIGHT_MAP["IMG"]; //将有图片背景的普通元素 权重设置为img
+    }
+    return width * height * weight;
+  }
+  /**
+   * 读取首屏内元素的最长耗时
+   */
+  function getElementMaxTimeConsuming(elements, observerTime) {
+    // 记录静态资源的响应结束时间
+    var resources = {};
+    // 遍历静态资源的时间信息
+    performance.getEntries().forEach(item => {
+      resources[item.name] = item.responseEnd;
+    });
+    var maxObj = {
+      ts: observerTime,
+      element: ''
+    };
+    elements.forEach(node => {
+      var stage = node.getAttribute(FMP_ATTRIBUTE);
+      ts = stage ? cacheTrees[stage].ts : 0;  // 从缓存中读取时间
+      switch(node.tagName) {
+        case 'IMG':
+          ts = resources[node.src];
+          break;
+        case 'VIDEO':
+          ts = resources[node.src];
+          !ts && (ts = resources[node.poster]);    // 读取封面
+          break;
+        default:
+          // 读取背景图地址
+          var match = window.getComputedStyle(node)['background-image'].match(/url\(\"(.*?)\"\)/);
+          if(!match) break;
+          var src;
+          // 判断是否包含协议
+          if (match && match[1]) {
+            src = match[1];
+          }
+          if (src.indexOf("http") == -1) {
+            src = location.protocol + match[1];
+          }
+          ts = resources[src];
+          break;
+      };
+      // console.log(node, ts)
+      if(ts > maxObj.ts) {
+        maxObj.ts = ts;
+        maxObj.element = node;
+      }
+    });
+    return maxObj;
+  }
+  window.getFMP = getFMP;
+}(this));
 (function (window) {
   "use strict";
 
@@ -300,8 +476,8 @@
   };
 
   // ----------------------------------------性能采集----------------------------------------
-  var firstScreenHeight = window.innerHeight;         //第一屏高度
-  var doc = window.document;
+  // var firstScreenHeight = window.innerHeight;         //第一屏高度
+  // var doc = window.document;
   /**
    * 计算当前时间与 fetchStart 之间的差值
    */
@@ -397,48 +573,49 @@
    * 计算首屏时间
    * 记录首屏图片的载入时间
    * 用户在没有滚动时候看到的内容渲染完成并且可以交互的时间
+   * 2023-01-06 删除，因为默认会采用 LCP 或 FMP 的计算结果
    */
-  doc.addEventListener("DOMContentLoaded", function () {
-      var isFindLastImg = false,
-        allFirsrImgsLoaded = false,
-        firstScreenImgs = [];
-      //用一个定时器差值页面中的图像元素
-      var interval = setInterval(function() {
-        //如果自定义了 firstScreen 的值，就销毁定时器
-        if(shin.firstScreen) {
-          clearInterval(interval);
-          return;
-        }
-        if(isFindLastImg) {
-          allFirsrImgsLoaded = firstScreenImgs.every(function(img) {
-            return img.complete;
-          });
-          //当所有的首屏图像都载入后，关闭定时器并记录首屏时间
-          if(allFirsrImgsLoaded) {
-            shin.firstScreen = _calcCurrentTime();
-            clearInterval(interval);
-          }
-          return;
-        }
-        var imgs = doc.querySelectorAll('img');
-        imgs = [].slice.call(imgs);   //转换成数组
-        //遍历页面中的图像
-        imgs.forEach(function(img) {
-          if(isFindLastImg)
-            return;
-          //当图像离顶部的距离超过屏幕宽度时，被认为找到了首屏的最后一张图
-          var rect = img.getBoundingClientRect();
-          if((rect.top + rect.height) > firstScreenHeight) {
-            isFindLastImg = true;
-		    		return;
-		    	}
-          //若未超过，则认为图像在首屏中
-          firstScreenImgs.push(img);
-        });
-      }, 0);
-    },
-    false
-  );
+  // doc.addEventListener("DOMContentLoaded", function () {
+  //     var isFindLastImg = false,
+  //       allFirsrImgsLoaded = false,
+  //       firstScreenImgs = [];
+  //     //用一个定时器差值页面中的图像元素
+  //     var interval = setInterval(function() {
+  //       //如果自定义了 firstScreen 的值，就销毁定时器
+  //       if(shin.firstScreen) {
+  //         clearInterval(interval);
+  //         return;
+  //       }
+  //       if(isFindLastImg) {
+  //         allFirsrImgsLoaded = firstScreenImgs.every(function(img) {
+  //           return img.complete;
+  //         });
+  //         //当所有的首屏图像都载入后，关闭定时器并记录首屏时间
+  //         if(allFirsrImgsLoaded) {
+  //           shin.firstScreen = _calcCurrentTime();
+  //           clearInterval(interval);
+  //         }
+  //         return;
+  //       }
+  //       var imgs = doc.querySelectorAll('img');
+  //       imgs = [].slice.call(imgs);   //转换成数组
+  //       //遍历页面中的图像
+  //       imgs.forEach(function(img) {
+  //         if(isFindLastImg)
+  //           return;
+  //         //当图像离顶部的距离超过屏幕宽度时，被认为找到了首屏的最后一张图
+  //         var rect = img.getBoundingClientRect();
+  //         if((rect.top + rect.height) > firstScreenHeight) {
+  //           isFindLastImg = true;
+	// 	    		return;
+	// 	    	}
+  //         //若未超过，则认为图像在首屏中
+  //         firstScreenImgs.push(img);
+  //       });
+  //     }, 0);
+  //   },
+  //   false
+  // );
 
   /**
    * 读取 timing 对象，兼容新版和旧版
@@ -627,6 +804,13 @@
       api[key] = _rounded(api[key]);
     }
 
+    // 读取FMP信息 TODO
+    var fmp = getFMP();
+    shin.fmp = {
+      time: _rounded(fmp.ts - navigationStart),
+      element: fmp.element ? _removeQuote(fmp.element.outerHTML) : ''
+    };
+
     /**
      * 浏览器读取到的性能参数，用于排查，并保留两位小数
      */
@@ -650,9 +834,10 @@
     obj.pkey = shin.param.pkey;
     obj.identity = getIdentity();
     obj.referer = window.location.href;    //来源地址
-    // 若未定义或未计算到，则默认为用户可操作时间
-    obj.firstScreen = shin.lcp.time || shin.firstScreen || obj.domReadyTime;
+    // 取 FMP、LCP 和用户可操作时间中的最大值
+    obj.firstScreen = Math.max.call(undefined, shin.fmp.time, shin.lcp.time, obj.domReadyTime);
     obj.timing.lcp = shin.lcp;  //记录LCP对象
+    obj.timing.fmp = shin.fmp;  //记录FMP对象
     obj.timing.fid = shin.fid;  //记录FID对象
     // 静态资源列表
     var resources = performance.getEntriesByType('resource');
@@ -704,8 +889,8 @@
     }, 0);
   }, false);
 
-  var SHIN_PERFORMANCE_DATA = "shin_performance_data";
-  var heartbeat;    //心跳定时器
+  // var SHIN_PERFORMANCE_DATA = "shin_performance_data";
+  // var heartbeat;    //心跳定时器
   /**
    * 发送数据
    */
@@ -716,30 +901,31 @@
     if(shin.param.rate >= rate && shin.param.pkey) {
       navigator.sendBeacon(shin.param.psrc, data);
     }
-    clearTimeout(heartbeat);
-    localStorage.removeItem(SHIN_PERFORMANCE_DATA); //移除性能缓存
+    // clearTimeout(heartbeat);
+    // localStorage.removeItem(SHIN_PERFORMANCE_DATA); //移除性能缓存
     isNeedHideEvent = false;
   }
   /**
    * 发送已存在的性能数据
    */
-  function sendExistData() {
-    var exist = localStorage.getItem(SHIN_PERFORMANCE_DATA);
-    if(!exist)
-      return;
-    setTimeout(function() {
-      sendBeacon(exist);
-    }, 0);
-  }
-  sendExistData();
+  // function sendExistData() {
+  //   var exist = localStorage.getItem(SHIN_PERFORMANCE_DATA);
+  //   if(!exist)
+  //     return;
+  //   setTimeout(function() {
+  //     sendBeacon(exist);
+  //   }, 0);
+  // }
+  // sendExistData();
   /**
    * 一个心跳回调函数，缓存性能参数
    * 适用于不能触发 pagehide 和 beforeunload 事件的浏览器
+   * 2022-01-06 删除，因为在 load 事件中也会上报性能参数，并且也是为了减少对 FMP 的计算次数，消除不必要的性能损耗，避免错误的计算结果
    */
-  function intervalHeartbeat() {
-    localStorage.setItem(SHIN_PERFORMANCE_DATA, _paramifyPerformance(shin.getTimes()));
-  }
-  heartbeat = setInterval(intervalHeartbeat, 200);
+  // function intervalHeartbeat() {
+  //   localStorage.setItem(SHIN_PERFORMANCE_DATA, _paramifyPerformance(shin.getTimes()));
+  // }
+  // heartbeat = setInterval(intervalHeartbeat, 200);
 
   // ----------------------------------------常量声明----------------------------------------
   // 定义行为类型
@@ -781,6 +967,7 @@
   }
   /**
    * 监控资源异常，即无法响应的资源
+   * 2022-12-13 删除，因为错误资源会被error事件捕获到
    */
   //  window.addEventListener(
   //   "load",
